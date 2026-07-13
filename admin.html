@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
+    <title>EZ Library Admin</title>
+    <link rel="stylesheet" href="admin.css" />
+  </head>
+  <body>
+    <main class="admin-shell">
+      <header class="admin-header">
+        <div>
+          <p class="admin-label">EZ LIBRARY</p>
+          <h1>ADMIN CONTROL</h1>
+        </div>
+        <a href="library.html">[ VIEW LIBRARY ]</a>
+      </header>
+
+      <section class="login-panel" id="login-panel" aria-labelledby="login-title">
+        <h2 id="login-title">GitHub administrator access</h2>
+        <p>
+          This static website does not store an administrator password. Enter a fine-grained
+          GitHub token limited to <strong>xei725/the-archive</strong> with
+          <strong>Contents: Read and write</strong> permission.
+        </p>
+        <p>
+          The token stays in this tab's memory only and is discarded when the tab closes.
+          <a href="https://github.com/settings/personal-access-tokens" target="_blank" rel="noopener">Create or manage a token</a>.
+        </p>
+        <form id="login-form">
+          <label for="token-input">GITHUB TOKEN</label>
+          <input id="token-input" name="token" type="password" autocomplete="off" required />
+          <button type="submit">[ CONNECT ]</button>
+        </form>
+      </section>
+
+      <section class="admin-editor" id="admin-editor" hidden>
+        <div class="admin-toolbar">
+          <div>
+            <button id="save-button" type="button">[ SAVE TO WEBSITE ]</button>
+            <button id="reload-button" type="button">[ RELOAD ]</button>
+          </div>
+          <button id="logout-button" type="button">[ LOG OUT ]</button>
+        </div>
+
+        <div class="editor-layout">
+          <aside class="folder-sidebar">
+            <div class="sidebar-heading">
+              <h2>FOLDERS</h2>
+              <button id="add-folder-button" type="button">[ + ]</button>
+            </div>
+            <div class="folder-admin-list" id="folder-admin-list"></div>
+          </aside>
+
+          <section class="folder-editor" aria-labelledby="folder-editor-title">
+            <div class="folder-editor-heading">
+              <h2 id="folder-editor-title">FOLDER</h2>
+              <button id="delete-folder-button" type="button">[ DELETE FOLDER ]</button>
+            </div>
+
+            <div class="field-grid">
+              <label>
+                FOLDER ID
+                <input id="folder-id-input" type="text" readonly />
+              </label>
+              <label>
+                FOLDER TITLE
+                <input id="folder-title-input" type="text" />
+              </label>
+              <label class="field-wide">
+                DISPLAY LINES — ONE LINE PER ROW
+                <textarea id="folder-lines-input" rows="3"></textarea>
+              </label>
+            </div>
+
+            <div class="items-heading">
+              <h3>CONTENTS</h3>
+              <div>
+                <button id="add-text-button" type="button">[ + TEXT ]</button>
+                <button id="add-link-button" type="button">[ + LINK ]</button>
+                <button id="upload-file-button" type="button">[ + FILE ]</button>
+                <input id="file-input" type="file" hidden />
+              </div>
+            </div>
+            <div class="item-editor-list" id="item-editor-list"></div>
+          </section>
+        </div>
+      </section>
+
+      <p class="admin-status" id="admin-status" role="status" aria-live="polite">READ ONLY UNTIL CONNECTED</p>
+    </main>
+
+    <script src="admin.js"></script>
+  </body>
+</html>

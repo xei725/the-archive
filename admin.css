@@ -1,0 +1,289 @@
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-width: 100%;
+  min-height: 100%;
+  margin: 0;
+  background: #000000;
+}
+
+body,
+button,
+input,
+textarea,
+select {
+  color: #ffffff;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 15px;
+}
+
+a:link {
+  color: #0000ee;
+}
+
+a:visited {
+  color: #551a8b;
+}
+
+button,
+input,
+textarea,
+select {
+  border: 1px solid #666666;
+  border-radius: 0;
+  background: #000000;
+}
+
+button {
+  padding: 5px 8px;
+  cursor: pointer;
+}
+
+button:hover,
+button:focus-visible {
+  color: #ffff00;
+  border-color: #ffffff;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 7px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.admin-shell {
+  width: min(1100px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 22px 0 56px;
+}
+
+.admin-header,
+.admin-toolbar,
+.sidebar-heading,
+.folder-editor-heading,
+.items-heading,
+.item-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.admin-header {
+  padding-bottom: 16px;
+  border-bottom: 1px solid #666666;
+}
+
+.admin-label,
+.admin-header h1,
+.admin-header p,
+.admin-header h2,
+.folder-editor h2,
+.items-heading h3,
+.item-heading h4 {
+  margin: 0;
+  font-weight: normal;
+}
+
+.admin-label {
+  color: #999999;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+}
+
+.admin-header h1 {
+  margin-top: 4px;
+  font-size: 24px;
+}
+
+.login-panel {
+  width: min(680px, 100%);
+  margin: 70px auto 0;
+}
+
+.login-panel h2 {
+  font-size: 22px;
+  font-weight: normal;
+}
+
+.login-panel p {
+  line-height: 1.55;
+}
+
+.login-panel form {
+  margin-top: 30px;
+}
+
+.login-panel label,
+.field-grid label,
+.item-card label {
+  display: block;
+  color: #aaaaaa;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.login-panel input {
+  margin: 7px 0 12px;
+}
+
+.admin-editor {
+  margin-top: 28px;
+}
+
+.admin-toolbar {
+  padding-bottom: 16px;
+  border-bottom: 1px solid #333333;
+}
+
+.editor-layout {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  min-height: 620px;
+}
+
+.folder-sidebar {
+  padding: 22px 18px 22px 0;
+  border-right: 1px solid #333333;
+}
+
+.folder-sidebar h2,
+.folder-editor h2,
+.items-heading h3 {
+  font-size: 16px;
+  letter-spacing: 0.08em;
+}
+
+.folder-admin-list {
+  margin-top: 18px;
+}
+
+.folder-admin-button {
+  width: 100%;
+  padding: 7px 4px;
+  border: 0;
+  border-bottom: 1px solid #222222;
+  color: #bbbbbb;
+  text-align: left;
+}
+
+.folder-admin-button.is-active {
+  color: #ffff00;
+}
+
+.folder-editor {
+  min-width: 0;
+  padding: 22px 0 22px 24px;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.field-grid input,
+.field-grid textarea,
+.item-card input,
+.item-card textarea,
+.item-card select {
+  margin-top: 6px;
+}
+
+.field-wide {
+  grid-column: 1 / -1;
+}
+
+.items-heading {
+  margin-top: 36px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #666666;
+}
+
+.item-editor-list:empty::before {
+  content: "This folder is empty.";
+  display: block;
+  padding: 40px 0;
+  color: #999999;
+  text-align: center;
+}
+
+.item-card {
+  padding: 18px 0;
+  border-bottom: 1px solid #333333;
+}
+
+.item-heading h4 {
+  font-size: 16px;
+}
+
+.item-fields {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.item-fields .field-wide {
+  grid-column: 1 / -1;
+}
+
+.admin-status {
+  position: sticky;
+  bottom: 0;
+  margin: 0;
+  padding: 10px 0;
+  border-top: 1px solid #666666;
+  background: #000000;
+  color: #00ff00;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.admin-status.is-error {
+  color: #ff4d4d;
+}
+
+@media (max-width: 760px) {
+  .editor-layout {
+    display: block;
+  }
+
+  .folder-sidebar {
+    padding-right: 0;
+    border-right: 0;
+    border-bottom: 1px solid #333333;
+  }
+
+  .folder-admin-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .folder-editor {
+    padding-left: 0;
+  }
+
+  .field-grid,
+  .item-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .field-wide,
+  .item-fields .field-wide {
+    grid-column: auto;
+  }
+}

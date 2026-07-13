@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
+    <title>EZ Library Folder</title>
+    <link rel="stylesheet" href="folder.css" />
+  </head>
+  <body>
+    <div class="folder-shell">
+      <nav class="folder-breadcrumb" aria-label="Folder path">
+        <a href="library.html">EZ Library</a>
+        <span aria-hidden="true"> / </span>
+        <span id="breadcrumb-folder">Folder</span>
+        <span id="breadcrumb-item-wrap" hidden>
+          <span aria-hidden="true"> / </span>
+          <span id="breadcrumb-item"></span>
+        </span>
+      </nav>
+
+      <main>
+        <section class="folder-index" id="folder-index" aria-labelledby="folder-title">
+          <img class="folder-page-icon" id="folder-icon" alt="" width="30" height="24" />
+          <h1 id="folder-title">Folder</h1>
+          <p class="folder-meta" id="folder-meta">0 item(s)</p>
+
+          <div class="empty-state" id="empty-state">
+            <p>This folder is empty.</p>
+          </div>
+
+          <ul class="folder-items" id="folder-items" hidden></ul>
+        </section>
+
+        <article class="record-view" id="record-view" aria-labelledby="record-title" hidden>
+          <p class="record-type" id="record-type"></p>
+          <h1 id="record-title"></h1>
+          <p class="record-description" id="record-description"></p>
+          <div class="record-content" id="record-content"></div>
+          <a class="record-open" id="record-open" href="#" target="_blank" rel="noopener" hidden></a>
+        </article>
+      </main>
+
+      <p class="folder-return"><a id="return-link" href="library.html">[ RETURN TO EZ LIBRARY ]</a></p>
+    </div>
+
+    <script src="library-data.js"></script>
+    <script src="folder-view.js"></script>
+  </body>
+</html>

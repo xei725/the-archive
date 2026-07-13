@@ -1,0 +1,125 @@
+html,
+body {
+  min-width: 100%;
+  min-height: 100%;
+  margin: 0;
+  background: #000000;
+}
+
+body {
+  color: #ffffff;
+  font-family: "Times New Roman", Times, serif;
+}
+
+a:link {
+  color: #0000ee;
+}
+
+a:visited {
+  color: #551a8b;
+}
+
+.folder-shell {
+  width: min(720px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 20px 0 48px;
+}
+
+.folder-breadcrumb {
+  min-height: 20px;
+  margin-bottom: 80px;
+  font-size: 16px;
+}
+
+.folder-index,
+.record-view {
+  text-align: center;
+}
+
+.folder-page-icon {
+  width: 30px;
+  height: 24px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+h1 {
+  margin: 7px 0 0;
+  font-size: 22px;
+  font-weight: normal;
+}
+
+.folder-meta,
+.record-type {
+  margin: 13px 0 0;
+  color: #999999;
+  font-size: 14px;
+}
+
+.empty-state {
+  margin-top: 72px;
+  font-size: 17px;
+}
+
+.folder-items {
+  width: min(560px, 100%);
+  margin: 54px auto 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.folder-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #333333;
+}
+
+.folder-item:first-child {
+  border-top: 1px solid #333333;
+}
+
+.folder-item__type {
+  margin-left: 8px;
+  color: #777777;
+  font-size: 12px;
+}
+
+.record-view {
+  width: min(620px, 100%);
+  margin: 0 auto;
+}
+
+.record-description {
+  margin: 30px 0 0;
+  color: #bbbbbb;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.record-content {
+  margin-top: 42px;
+  text-align: left;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.record-open {
+  display: inline-block;
+  margin-top: 42px;
+}
+
+.folder-return {
+  margin-top: 84px;
+  text-align: center;
+  font-size: 14px;
+}
+
+@media (max-width: 560px) {
+  .folder-breadcrumb {
+    margin-bottom: 56px;
+  }
+
+  .folder-return {
+    margin-top: 64px;
+  }
+}
