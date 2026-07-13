@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="The Archive — 一座存在于网络中的个人数字档案。"
+    />
+    <meta name="theme-color" content="#071018" />
+    <title>The Archive</title>
+    <link rel="preload" as="image" href="assets/images/valley-blue-hour.png" />
+    <link rel="preload" as="image" href="assets/images/valley-summer.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#archive-index">跳到档案目录</a>
+
+    <div class="app" id="app">
+      <div class="scene" id="scene" aria-hidden="true">
+        <img
+          class="scene__image scene__image--base"
+          src="assets/images/valley-blue-hour.png"
+          alt=""
+        />
+        <div class="scene__reveal" id="reveal-layer">
+          <img
+            class="scene__image scene__image--alternate"
+            src="assets/images/valley-summer.png"
+            alt=""
+          />
+        </div>
+        <div class="scene__scrim"></div>
+        <div class="scene__mist"></div>
+        <div class="scene__grain"></div>
+      </div>
+
+      <header class="topbar">
+        <button class="wordmark" type="button" data-view="index" aria-label="返回档案首页">
+          THE ARCHIVE
+        </button>
+
+        <nav class="primary-nav" aria-label="主导航">
+          <button class="nav-link is-active" type="button" data-view="index">INDEX</button>
+          <span aria-hidden="true">/</span>
+          <button class="nav-link" type="button" data-record="works">RECORDS</button>
+          <span aria-hidden="true">/</span>
+          <button class="nav-link" type="button" data-view="limbo">LIMBO</button>
+        </nav>
+
+        <div class="topbar__tools">
+          <time id="local-time" datetime="">00:00:00</time>
+          <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="false">
+            <span class="sound-toggle__label">SOUND OFF</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 10v4" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="archive-main" id="archive-index">
+        <section class="index-view view is-active" id="index-view" aria-labelledby="index-title">
+          <div class="index-copy">
+            <h1 id="index-title">ARCHIVE INDEX</h1>
+            <p class="archive-statement">
+              This archive has remained online longer than anyone remembers.
+            </p>
+
+            <div class="record-list" aria-label="档案列表">
+              <button class="record-link" type="button" data-record="subject">
+                <span class="record-link__id">01</span>
+                <span class="record-link__name">SUBJECT</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 12h13M13 6l6 6-6 6" />
+                </svg>
+              </button>
+              <button class="record-link" type="button" data-record="works">
+                <span class="record-link__id">02</span>
+                <span class="record-link__name">WORKS</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 12h13M13 6l6 6-6 6" />
+                </svg>
+              </button>
+              <button class="record-link" type="button" data-record="visuals">
+                <span class="record-link__id">03</span>
+                <span class="record-link__name">VISUAL RECORDS</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 12h13M13 6l6 6-6 6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="limbo-view view" id="limbo-view" aria-labelledby="limbo-title" hidden>
+          <div class="limbo-copy">
+            <p class="system-label">UNFILED REGION / 04</p>
+            <h2 id="limbo-title">LIMBO</h2>
+            <p>有些记录还没有消失，也还没有准备好被保存。</p>
+            <div class="fragment" id="fragment">
+              <div class="fragment__status">
+                <span>FRAGMENT_004</span>
+                <span id="fragment-progress">INCOMPLETE / 17%</span>
+              </div>
+              <p class="fragment__content" id="fragment-content" hidden>
+                “记忆并不会因为没有被打开而停止变化。”
+              </p>
+              <button class="fragment__recover" id="fragment-recover" type="button">
+                RECOVER FRAGMENT
+              </button>
+            </div>
+            <button class="text-action" type="button" data-view="index">RETURN TO INDEX</button>
+          </div>
+        </section>
+
+        <section class="null-view view" id="null-view" aria-labelledby="null-title" hidden>
+          <div class="null-copy">
+            <p class="system-label">UNLISTED REGION / 00</p>
+            <h2 id="null-title">NULL</h2>
+            <p class="null-message">我等你很久了。</p>
+            <p class="null-translation">I HAVE BEEN WAITING FOR YOU.</p>
+            <button class="text-action" type="button" data-view="index">RETURN TO INDEX</button>
+          </div>
+        </section>
+      </main>
+
+      <div class="scan-interface" id="scan-interface" aria-hidden="true">
+        <div class="scan-interface__ring">
+          <span class="scan-interface__tick scan-interface__tick--top"></span>
+          <span class="scan-interface__tick scan-interface__tick--right"></span>
+          <span class="scan-interface__tick scan-interface__tick--bottom"></span>
+          <span class="scan-interface__tick scan-interface__tick--left"></span>
+        </div>
+        <div class="scan-interface__line"></div>
+        <div class="coordinates">
+          <span id="latitude">61.3790° N</span>
+          <span id="longitude">07.1511° E</span>
+        </div>
+      </div>
+
+      <aside class="record-panel" id="record-panel" aria-hidden="true" aria-labelledby="panel-title">
+        <button class="panel-close" id="panel-close" type="button" aria-label="关闭档案">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6l12 12M18 6 6 18" />
+          </svg>
+        </button>
+        <p class="system-label" id="panel-code">RECORD / 01</p>
+        <h2 id="panel-title">SUBJECT</h2>
+        <div class="panel-rule"></div>
+        <p class="panel-intro" id="panel-intro"></p>
+        <dl class="record-meta" id="record-meta"></dl>
+        <div class="panel-body" id="panel-body"></div>
+        <p class="panel-status" id="panel-status"></p>
+      </aside>
+      <button class="panel-backdrop" id="panel-backdrop" type="button" aria-label="关闭档案" tabindex="-1"></button>
+
+      <footer class="statusbar">
+        <div>
+          <span class="status-dot"></span>
+          <span>OBSERVER: <strong id="observer-state">UNKNOWN</strong></span>
+          <span aria-hidden="true">/</span>
+          <span>ACCESS: <strong id="access-state">TEMPORARY</strong></span>
+        </div>
+        <div class="statusbar__right">
+          <button class="null-access" id="null-access" type="button" data-view="null" hidden>
+            NULL
+          </button>
+          <div class="signal" aria-label="系统信号正常">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+      </footer>
+
+      <div class="notice" id="notice" role="status" aria-live="polite"></div>
+
+      <section class="intro is-active" id="intro" aria-label="进入档案">
+        <div class="intro__ambient"></div>
+        <button class="intro__skip" id="intro-skip" type="button">SKIP SEQUENCE</button>
+        <div class="intro__center">
+          <div class="intro__greeting" id="intro-greeting">
+            <p class="intro__zh">你终于来了。</p>
+            <p class="intro__en">YOU HAVE FINALLY ARRIVED.</p>
+          </div>
+          <div class="intro__scan" id="intro-scan" aria-hidden="true">
+            <p>ARCHIVE NODE 01</p>
+            <p>STATUS: <span>ONLINE</span></p>
+            <p class="intro__scan-line">IDENTITY: <span id="intro-identity">UNKNOWN</span></p>
+          </div>
+          <button class="intro__enter" id="intro-enter" type="button">ENTER THE ARCHIVE</button>
+        </div>
+        <p class="intro__node">ARCHIVE NODE 01 / SIGNAL STABLE</p>
+      </section>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
