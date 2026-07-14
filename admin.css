@@ -122,6 +122,25 @@ textarea {
   line-height: 1.55;
 }
 
+.permission-list {
+  margin: 18px 0;
+  padding: 14px 14px 14px 34px;
+  border: 1px solid #333333;
+  color: #cccccc;
+  line-height: 1.65;
+}
+
+.login-diagnostics {
+  margin-top: 18px;
+  padding: 10px 14px;
+  border: 1px solid #8a2424;
+  color: #ff9c9c;
+}
+
+.login-diagnostics p {
+  margin: 5px 0;
+}
+
 .login-panel form {
   margin-top: 30px;
 }
@@ -146,6 +165,15 @@ textarea {
 .admin-toolbar {
   padding-bottom: 16px;
   border-bottom: 1px solid #333333;
+}
+
+.connection-summary {
+  flex: 1;
+  margin: 0;
+  color: #999999;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-align: center;
 }
 
 .editor-layout {
@@ -241,6 +269,10 @@ textarea {
   grid-column: 1 / -1;
 }
 
+.item-card label[hidden] {
+  display: none;
+}
+
 .admin-status {
   position: sticky;
   bottom: 0;
@@ -258,6 +290,17 @@ textarea {
 }
 
 @media (max-width: 760px) {
+  .admin-toolbar {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .connection-summary {
+    order: 3;
+    flex-basis: 100%;
+    text-align: left;
+  }
+
   .editor-layout {
     display: block;
   }

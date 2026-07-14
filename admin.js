@@ -4,10 +4,12 @@
   var REPOSITORY = "xei725/the-archive";
   var BRANCH = "main";
   var DATA_PATH = "library-data.js";
+  var API_BASE = "https://api.github.com";
   var MAX_FILE_SIZE = 5 * 1024 * 1024;
   var token = "";
   var library = null;
   var dataSha = "";
+  var connectedUser = "";
   var activeFolderIndex = 0;
   var dirty = false;
 
@@ -16,15 +18,19 @@
   var tokenInput = document.getElementById("token-input");
   var editor = document.getElementById("admin-editor");
   var status = document.getElementById("admin-status");
+  var loginDiagnostics = document.getElementById("login-diagnostics");
+  var loginDiagnosticsMessage = document.getElementById("login-diagnostics-message");
+  var connectionSummary = document.getElementById("connection-summary");
   var folderList = document.getElementById("folder-admin-list");
   var folderIdInput = document.getElementById("folder-id-input");
   var folderTitleInput = document.getElementById("folder-title-input");
   var folderLinesInput = document.getElementById("folder-lines-input");
   var itemList = document.getElementById("item-editor-list");
   var fileInput = document.getElementById("file-input");
+  var saveButton = document.getElementById("save-button");
 
   loginForm.addEventListener("submit", connect);
-  document.getElementById("save-button").addEventListener("click", saveLibrary);
+  saveButton.addEventListener("click", saveLibrary);
   document.getElementById("reload-button").addEventListener("click", loadLibrary);
   document.getElementById("logout-button").addEventListener("click", logout);
   document.getElementById("add-folder-button").addEventListener("click", addFolder);
@@ -47,6 +53,7 @@
     token = tokenInput.value.trim();
     if (!token) return;
     tokenInput.value = "";
+    hideLoginDiagnostics();
     await loadLibrary();
   }
 
@@ -54,14 +61,32 @@
     if (!token) return;
     if (dirty && !window.confirm("Discard unsaved changes and reload from GitHub?")) return;
     setStatus("CONNECTING TO GITHUB...");
+    setBusy(true);
+    var wasConnected = Boolean(library);
 
     try {
+      if (!connectedUser) {
+        var user = await githubRequest(API_BASE + "/user");
+        var repository = await githubRequest(API_BASE + "/repos/" + REPOSITORY);
+        connectedUser = user.login || "unknown";
+
+        if (repository.default_branch && repository.default_branch !== BRANCH) {
+          throw createAdminError(
+            "The configured branch is " + BRANCH + ", but GitHub reports " + repository.default_branch + ".",
+            "configuration"
+          );
+        }
+
+        if (repository.permissions && repository.permissions.push === false) {
+          throw createAdminError(
+            "This token can read " + REPOSITORY + " but cannot write to it.",
+            "permission"
+          );
+        }
+      }
+
       var payload = await githubRequest(contentsEndpoint(DATA_PATH) + "?ref=" + encodeURIComponent(BRANCH));
-      var source = decodeBase64Utf8(payload.content);
-      var firstEquals = source.indexOf("=");
-      var lastSemicolon = source.lastIndexOf(";");
-      if (firstEquals === -1 || lastSemicolon === -1) throw new Error("Library data format is invalid.");
-      library = JSON.parse(source.slice(firstEquals + 1, lastSemicolon).trim());
+      library = parseLibrarySource(decodeBase64Utf8(payload.content));
       if (!Array.isArray(library.folders)) throw new Error("Folder data is missing.");
       library.folders.forEach(normalizeFolder);
       dataSha = payload.sha;
@@ -69,19 +94,43 @@
       dirty = false;
       loginPanel.hidden = true;
       editor.hidden = false;
+      connectionSummary.textContent = "CONNECTED AS @" + connectedUser + " / " + REPOSITORY + " / " + BRANCH;
       renderAll();
       setStatus("CONNECTED / READY");
     } catch (error) {
-      token = "";
-      loginPanel.hidden = false;
-      editor.hidden = true;
-      setStatus(error.message || "Unable to connect.", true);
+      if (!wasConnected) {
+        token = "";
+        connectedUser = "";
+        library = null;
+        dataSha = "";
+        loginPanel.hidden = false;
+        editor.hidden = true;
+        showLoginDiagnostics(error);
+      }
+      setStatus(formatGitHubError(error, "Unable to connect."), true);
+    } finally {
+      setBusy(false);
     }
   }
 
+  function parseLibrarySource(source) {
+    var firstEquals = source.indexOf("=");
+    var lastSemicolon = source.lastIndexOf(";");
+    if (firstEquals === -1 || lastSemicolon === -1) {
+      throw createAdminError("Library data format is invalid.", "data");
+    }
+    return JSON.parse(source.slice(firstEquals + 1, lastSemicolon).trim());
+  }
+
   function normalizeFolder(folder) {
+    if (!folder.id) folder.id = makeId("folder");
+    if (!folder.title) folder.title = "Untitled Folder";
     if (!Array.isArray(folder.lines) || !folder.lines.length) folder.lines = [folder.title || "Untitled Folder"];
     if (!Array.isArray(folder.items)) folder.items = [];
+    folder.items.forEach(function (item) {
+      if (!item.id) item.id = makeId("item");
+      if (!item.type) item.type = "text";
+    });
   }
 
   function renderAll() {
@@ -185,7 +234,7 @@
   }
 
   function addFolder() {
-    var id = "folder-" + Date.now();
+    var id = makeId("folder");
     library.folders.push({ id: id, title: "New Folder", lines: ["New Folder"], items: [] });
     activeFolderIndex = library.folders.length - 1;
     dirty = true;
@@ -208,7 +257,7 @@
     var folder = currentFolder();
     if (!folder) return;
     folder.items.push({
-      id: "item-" + Date.now(),
+      id: makeId("item"),
       title: type === "link" ? "New Link" : "New Record",
       type: type,
       description: "",
@@ -230,12 +279,14 @@
       return;
     }
 
-    var safeName = file.name.replace(/[^a-zA-Z0-9._-]+/g, "-");
-    var path = "library-files/" + folder.id + "/" + Date.now() + "-" + safeName;
+    var safeName = file.name.replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-+|-+$/g, "") || "upload.bin";
+    var itemId = makeId("file");
+    var path = "library-files/" + folder.id + "/" + itemId + "-" + safeName;
     setStatus("UPLOADING " + file.name.toUpperCase() + "...");
+    setBusy(true);
 
     try {
-      await githubRequest(contentsEndpoint(path), {
+      var result = await githubRequest(contentsEndpoint(path), {
         method: "PUT",
         body: JSON.stringify({
           message: "Upload EZ Library file",
@@ -244,25 +295,33 @@
         })
       });
       folder.items.push({
-        id: "file-" + Date.now(),
+        id: itemId,
         title: file.name,
         type: "file",
         description: "",
         content: "",
-        url: path
+        url: path,
+        fileSha: result.content && result.content.sha ? result.content.sha : "",
+        mimeType: file.type || "application/octet-stream",
+        fileSize: file.size,
+        uploadedAt: new Date().toISOString()
       });
       dirty = true;
       renderItems(folder);
       setStatus("FILE UPLOADED / SAVE DIRECTORY CHANGES");
     } catch (error) {
-      setStatus(error.message || "File upload failed.", true);
+      setStatus(formatGitHubError(error, "File upload failed."), true);
+    } finally {
+      setBusy(false);
     }
   }
 
   async function saveLibrary() {
     if (!token || !library || !dataSha) return;
     setStatus("SAVING TO GITHUB...");
+    setBusy(true);
     try {
+      validateLibrary();
       var source = "window.EZ_LIBRARY = " + JSON.stringify(library, null, 2) + ";\n";
       var result = await githubRequest(contentsEndpoint(DATA_PATH), {
         method: "PUT",
@@ -273,11 +332,13 @@
           branch: BRANCH
         })
       });
-      dataSha = result.content.sha;
+      dataSha = result.content && result.content.sha ? result.content.sha : dataSha;
       dirty = false;
       setStatus("SAVED / GITHUB PAGES WILL REFRESH SHORTLY");
     } catch (error) {
-      setStatus(error.message || "Save failed.", true);
+      setStatus(formatGitHubError(error, "Save failed."), true);
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -286,9 +347,12 @@
     token = "";
     library = null;
     dataSha = "";
+    connectedUser = "";
     dirty = false;
     editor.hidden = true;
     loginPanel.hidden = false;
+    connectionSummary.textContent = "";
+    hideLoginDiagnostics();
     setStatus("LOGGED OUT / READ ONLY");
   }
 
@@ -298,7 +362,7 @@
 
   function contentsEndpoint(path) {
     var encodedPath = path.split("/").map(encodeURIComponent).join("/");
-    return "https://api.github.com/repos/" + REPOSITORY + "/contents/" + encodedPath;
+    return API_BASE + "/repos/" + REPOSITORY + "/contents/" + encodedPath;
   }
 
   async function githubRequest(url, options) {
@@ -310,8 +374,93 @@
     });
     var response = await fetch(url, requestOptions);
     var payload = await response.json().catch(function () { return {}; });
-    if (!response.ok) throw new Error(payload.message || ("GitHub request failed: " + response.status));
+    if (!response.ok) throw createGitHubError(response, payload);
     return payload;
+  }
+
+  function createGitHubError(response, payload) {
+    var message = payload && payload.message ? payload.message : "GitHub request failed: " + response.status;
+    var kind = "github";
+
+    if (response.status === 401) kind = "authentication";
+    if (response.status === 403 && /resource not accessible|forbidden/i.test(message)) kind = "permission";
+    if (response.status === 404) kind = "permission";
+    if (response.status === 409 || response.status === 422) kind = "conflict";
+
+    var error = createAdminError(message, kind);
+    error.status = response.status;
+    error.requestUrl = response.url;
+    error.acceptedPermissions = response.headers.get("x-accepted-github-permissions") || "";
+    error.oauthScopes = response.headers.get("x-oauth-scopes") || "";
+    return error;
+  }
+
+  function createAdminError(message, kind) {
+    var error = new Error(message);
+    error.kind = kind || "admin";
+    return error;
+  }
+
+  function formatGitHubError(error, fallback) {
+    if (!error) return fallback;
+    if (error.kind === "authentication") {
+      return "TOKEN REJECTED / IT IS INVALID OR EXPIRED";
+    }
+    if (error.kind === "permission") {
+      var required = error.acceptedPermissions ? " / REQUIRED: " + error.acceptedPermissions.toUpperCase() : "";
+      return "TOKEN HAS NO WRITE ACCESS TO " + REPOSITORY.toUpperCase() + required;
+    }
+    if (error.kind === "conflict") {
+      return "GITHUB DATA CHANGED / RELOAD BEFORE SAVING AGAIN";
+    }
+    return error.message || fallback;
+  }
+
+  function showLoginDiagnostics(error) {
+    loginDiagnosticsMessage.textContent = formatGitHubError(error, "Unable to connect.");
+    loginDiagnostics.hidden = false;
+  }
+
+  function hideLoginDiagnostics() {
+    loginDiagnostics.hidden = true;
+    loginDiagnosticsMessage.textContent = "";
+  }
+
+  function validateLibrary() {
+    var folderIds = Object.create(null);
+    var itemIds = Object.create(null);
+
+    library.folders.forEach(function (folder) {
+      normalizeFolder(folder);
+      folder.title = String(folder.title || "Untitled Folder").trim() || "Untitled Folder";
+      folder.lines = folder.lines.map(function (line) { return String(line).trim(); }).filter(Boolean);
+      if (!folder.lines.length) folder.lines = [folder.title];
+      if (folderIds[folder.id]) throw createAdminError("Duplicate folder ID: " + folder.id, "data");
+      folderIds[folder.id] = true;
+
+      folder.items.forEach(function (item) {
+        if (itemIds[item.id]) throw createAdminError("Duplicate item ID: " + item.id, "data");
+        itemIds[item.id] = true;
+        if (["text", "link", "file"].indexOf(item.type) === -1) item.type = "text";
+        item.title = String(item.title || "Untitled item").trim() || "Untitled item";
+      });
+    });
+  }
+
+  function makeId(prefix) {
+    if (window.crypto && typeof window.crypto.randomUUID === "function") {
+      return prefix + "-" + window.crypto.randomUUID();
+    }
+    return prefix + "-" + Date.now() + "-" + Math.random().toString(16).slice(2);
+  }
+
+  function setBusy(isBusy) {
+    var controls = editor.querySelectorAll("button, input, textarea, select");
+    Array.prototype.forEach.call(controls, function (control) {
+      control.disabled = Boolean(isBusy);
+    });
+    var loginButton = loginForm.querySelector("button");
+    if (loginButton) loginButton.disabled = Boolean(isBusy);
   }
 
   function decodeBase64Utf8(value) {

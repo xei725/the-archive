@@ -24,10 +24,23 @@
           GitHub token limited to <strong>xei725/the-archive</strong> with
           <strong>Contents: Read and write</strong> permission.
         </p>
+        <ol class="permission-list">
+          <li>Resource owner: <strong>xei725</strong></li>
+          <li>Repository access: <strong>Only select repositories → the-archive</strong></li>
+          <li>Repository permissions: <strong>Contents → Read and write</strong></li>
+        </ol>
         <p>
           The token stays in this tab's memory only and is discarded when the tab closes.
-          <a href="https://github.com/settings/personal-access-tokens" target="_blank" rel="noopener">Create or manage a token</a>.
+          Actions permission is not required.
+          <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Create a fine-grained token</a>.
         </p>
+        <div class="login-diagnostics" id="login-diagnostics" role="alert" hidden>
+          <p id="login-diagnostics-message"></p>
+          <p>
+            Check the three settings above, then create a new token. Existing fine-grained token
+            permissions cannot always be expanded after creation.
+          </p>
+        </div>
         <form id="login-form">
           <label for="token-input">GITHUB TOKEN</label>
           <input id="token-input" name="token" type="password" autocomplete="off" required />
@@ -41,6 +54,7 @@
             <button id="save-button" type="button">[ SAVE TO WEBSITE ]</button>
             <button id="reload-button" type="button">[ RELOAD ]</button>
           </div>
+          <p class="connection-summary" id="connection-summary"></p>
           <button id="logout-button" type="button">[ LOG OUT ]</button>
         </div>
 
@@ -80,7 +94,7 @@
                 <button id="add-text-button" type="button">[ + TEXT ]</button>
                 <button id="add-link-button" type="button">[ + LINK ]</button>
                 <button id="upload-file-button" type="button">[ + FILE ]</button>
-                <input id="file-input" type="file" hidden />
+                <input id="file-input" type="file" accept="image/*,audio/*,video/*,.pdf,.txt,.md,.zip" hidden />
               </div>
             </div>
             <div class="item-editor-list" id="item-editor-list"></div>
