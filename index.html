@@ -16,7 +16,14 @@
     <script src="audio-system.js" defer></script>
     <script src="script.js" defer></script>
   </head>
-  <body data-period="day" data-solar="day" data-weather="unavailable" data-weather-status="location-required">
+  <body
+    data-period="day"
+    data-solar="day"
+    data-weather="unavailable"
+    data-weather-intensity="none"
+    data-weather-effects="on"
+    data-weather-status="location-required"
+  >
     <a class="skip-link" href="#room-navigation">跳到房间入口</a>
 
     <main class="archive-hall" id="archive-hall">
@@ -53,17 +60,57 @@
             <span class="environment__label">WEATHER</span>
             <span class="environment__value" id="weather-value">LOCATION REQUIRED</span>
             <span class="environment__meta" id="weather-location" hidden></span>
-            <button
-              class="environment__location-button"
-              id="location-button"
-              type="button"
-              aria-label="Use your location for live weather"
-            >
-              USE MY LOCATION
-            </button>
+            <div class="environment__weather-actions">
+              <button
+                class="environment__location-button"
+                id="location-button"
+                type="button"
+                aria-label="Use your location for live weather"
+              >
+                USE MY LOCATION
+              </button>
+              <button
+                class="environment__effects-button"
+                id="weather-effects-toggle"
+                type="button"
+                aria-label="Turn off visual weather effects"
+                aria-pressed="true"
+              >
+                FX ON
+              </button>
+            </div>
           </div>
         </section>
       </header>
+
+      <div class="weather-foreground" aria-hidden="true">
+        <div class="weather-foreground__rain">
+          <i style="--x: 1.5%; --delay: -2.1s; --duration: 8.4s; --length: 5.4rem"></i>
+          <i style="--x: 5.2%; --delay: -5.7s; --duration: 10.2s; --length: 3.8rem"></i>
+          <i style="--x: 9.4%; --delay: -1.2s; --duration: 11.8s; --length: 4.7rem"></i>
+          <i style="--x: 14.2%; --delay: -7.4s; --duration: 13.1s; --length: 3.2rem"></i>
+          <i style="--x: 85.8%; --delay: -4.8s; --duration: 12.4s; --length: 4.2rem"></i>
+          <i style="--x: 90.6%; --delay: -8.9s; --duration: 14.1s; --length: 3.5rem"></i>
+          <i style="--x: 95.1%; --delay: -3.4s; --duration: 9.7s; --length: 5rem"></i>
+          <i style="--x: 98.3%; --delay: -6.2s; --duration: 11.1s; --length: 3.1rem"></i>
+        </div>
+        <div class="weather-foreground__snow">
+          <i style="--x: 4%; --drift: 2.8rem; --delay: -7s; --duration: 17s; --size: 3px"></i>
+          <i style="--x: 12%; --drift: -2rem; --delay: -13s; --duration: 22s; --size: 2px"></i>
+          <i style="--x: 20%; --drift: 3.4rem; --delay: -3s; --duration: 20s; --size: 4px"></i>
+          <i style="--x: 29%; --drift: -2.6rem; --delay: -17s; --duration: 25s; --size: 2px"></i>
+          <i style="--x: 38%; --drift: 2.2rem; --delay: -10s; --duration: 19s; --size: 3px"></i>
+          <i style="--x: 46%; --drift: -3.1rem; --delay: -4s; --duration: 24s; --size: 2px"></i>
+          <i style="--x: 55%; --drift: 3.7rem; --delay: -15s; --duration: 21s; --size: 4px"></i>
+          <i style="--x: 63%; --drift: -2.4rem; --delay: -8s; --duration: 18s; --size: 3px"></i>
+          <i style="--x: 71%; --drift: 2.9rem; --delay: -19s; --duration: 26s; --size: 2px"></i>
+          <i style="--x: 79%; --drift: -3.5rem; --delay: -5s; --duration: 23s; --size: 4px"></i>
+          <i style="--x: 88%; --drift: 2.1rem; --delay: -12s; --duration: 20s; --size: 3px"></i>
+          <i style="--x: 96%; --drift: -2.8rem; --delay: -2s; --duration: 24s; --size: 2px"></i>
+        </div>
+        <div class="weather-foreground__fog"></div>
+        <div class="weather-foreground__flash"></div>
+      </div>
 
       <nav class="room-map" id="room-navigation" aria-label="Archive Hall 房间入口">
         <a

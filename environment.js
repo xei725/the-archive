@@ -134,6 +134,7 @@
 
   WeatherSystem.prototype.showMessage = function (message, state) {
     document.body.dataset.weather = "unavailable";
+    document.body.dataset.weatherIntensity = "none";
     this.valueElement.textContent = message;
     this.locationElement.textContent = "";
     this.locationElement.hidden = true;
@@ -174,6 +175,9 @@
     }
 
     document.body.dataset.weather = condition;
+    document.body.dataset.weatherIntensity = /^(light|moderate|heavy)$/.test(weather.intensity)
+      ? weather.intensity
+      : "none";
     document.body.dataset.solar = weather.isDay === false ? "night" : "day";
     this.valueElement.textContent = value;
     this.locationElement.textContent = weather.location ? String(weather.location).toUpperCase() : "";

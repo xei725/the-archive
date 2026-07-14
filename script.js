@@ -15,8 +15,10 @@
   var soundToggle = document.getElementById("sound-toggle");
   var soundLabel = document.getElementById("sound-label");
   var locationButton = document.getElementById("location-button");
+  var weatherEffectsToggle = document.getElementById("weather-effects-toggle");
   var previewTimer = null;
   var transitionLocked = false;
+  var WEATHER_EFFECTS_KEY = "the-archive-weather-effects-v1";
 
   var environment = new window.ArchiveEnvironment({
     timeElement: document.getElementById("local-time"),
@@ -25,6 +27,32 @@
     weatherLocationElement: document.getElementById("weather-location")
   });
   var archiveAudio = new window.ArchiveAudio();
+
+  function readWeatherEffectsPreference() {
+    try {
+      return window.localStorage.getItem(WEATHER_EFFECTS_KEY) !== "off";
+    } catch (error) {
+      return true;
+    }
+  }
+
+  function setWeatherEffects(enabled, persist) {
+    document.body.dataset.weatherEffects = enabled ? "on" : "off";
+    weatherEffectsToggle.setAttribute("aria-pressed", String(enabled));
+    weatherEffectsToggle.setAttribute(
+      "aria-label",
+      enabled ? "Turn off visual weather effects" : "Turn on visual weather effects"
+    );
+    weatherEffectsToggle.textContent = enabled ? "FX ON" : "FX OFF";
+
+    if (persist) {
+      try {
+        window.localStorage.setItem(WEATHER_EFFECTS_KEY, enabled ? "on" : "off");
+      } catch (error) {
+        // The preference remains active for this visit when storage is unavailable.
+      }
+    }
+  }
 
   function setSceneFocus(room, element) {
     var fallback = ROOM_FOCUS[room] || { x: "50%", y: "50%" };
@@ -133,6 +161,12 @@
       });
   });
 
+  weatherEffectsToggle.addEventListener("click", function () {
+    var enabled = document.body.dataset.weatherEffects !== "on";
+    setWeatherEffects(enabled, true);
+    status.textContent = enabled ? "WEATHER EFFECTS / ON" : "WEATHER EFFECTS / OFF";
+  });
+
   document.addEventListener("archive:weatherchange", function (event) {
     archiveAudio.setWeather(event.detail.condition);
   });
@@ -170,5 +204,6 @@
     environment.stop();
   });
 
+  setWeatherEffects(readWeatherEffectsPreference(), false);
   environment.start();
 })();

@@ -160,6 +160,7 @@ body[data-period="dawn"] .scene__image {
   width: 18%;
   height: 26%;
   opacity: 0;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 11%, #000 82%, transparent);
   mask-image: linear-gradient(180deg, transparent, #000 11%, #000 82%, transparent);
   transition: opacity 900ms ease;
 }
@@ -199,42 +200,51 @@ body[data-period="dawn"] .scene__image {
   animation: archive-snow 8s linear infinite;
 }
 
-body[data-weather="clear"][data-solar="day"] .scene__sunlight {
+body[data-weather-effects="on"][data-weather="clear"][data-solar="day"] .scene__sunlight {
   opacity: 0.42;
 }
 
-body[data-weather="cloudy"] .scene__weather-filter {
+body[data-weather-effects="on"][data-weather="cloudy"] .scene__weather-filter {
   opacity: 0.34;
   background: rgba(48, 63, 66, 0.3);
 }
 
-body[data-weather="fog"] .scene__weather-filter {
+body[data-weather-effects="on"][data-weather="fog"] .scene__weather-filter {
   opacity: 0.5;
   background: rgba(150, 158, 148, 0.3);
   backdrop-filter: saturate(0.72) contrast(0.92);
 }
 
-body[data-weather="rain"] .scene__weather-filter,
-body[data-weather="storm"] .scene__weather-filter {
+body[data-weather-effects="on"][data-weather="rain"] .scene__weather-filter,
+body[data-weather-effects="on"][data-weather="storm"] .scene__weather-filter {
   opacity: 0.52;
   background: rgba(34, 50, 56, 0.42);
 }
 
-body[data-weather="rain"] .scene__rain,
-body[data-weather="storm"] .scene__rain {
+body[data-weather-effects="on"][data-weather="rain"] .scene__rain,
+body[data-weather-effects="on"][data-weather="storm"] .scene__rain {
   opacity: 0.52;
 }
 
-body[data-weather="snow"] .scene__weather-filter {
+body[data-weather-effects="on"][data-weather="rain"][data-weather-intensity="light"] .scene__rain {
+  opacity: 0.28;
+}
+
+body[data-weather-effects="on"][data-weather="rain"][data-weather-intensity="heavy"] .scene__rain,
+body[data-weather-effects="on"][data-weather="storm"][data-weather-intensity="heavy"] .scene__rain {
+  opacity: 0.72;
+}
+
+body[data-weather-effects="on"][data-weather="snow"] .scene__weather-filter {
   opacity: 0.3;
   background: rgba(181, 191, 190, 0.23);
 }
 
-body[data-weather="snow"] .scene__snow {
+body[data-weather-effects="on"][data-weather="snow"] .scene__snow {
   opacity: 0.9;
 }
 
-body[data-weather="storm"] .scene__lightning {
+body[data-weather-effects="on"][data-weather="storm"] .scene__lightning {
   animation: archive-lightning 9s steps(1, end) infinite;
 }
 
@@ -243,9 +253,95 @@ body[data-solar="night"] .scene__weather-filter {
   background: rgba(18, 29, 40, 0.38);
 }
 
-body[data-solar="night"][data-weather="rain"] .scene__weather-filter,
-body[data-solar="night"][data-weather="storm"] .scene__weather-filter {
+body[data-weather-effects="on"][data-solar="night"][data-weather="rain"] .scene__weather-filter,
+body[data-weather-effects="on"][data-solar="night"][data-weather="storm"] .scene__weather-filter {
   opacity: 0.56;
+}
+
+.weather-foreground {
+  position: absolute;
+  z-index: 16;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.weather-foreground__rain,
+.weather-foreground__snow,
+.weather-foreground__fog,
+.weather-foreground__flash {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.weather-foreground__rain i,
+.weather-foreground__snow i {
+  position: absolute;
+  display: block;
+  opacity: 0;
+}
+
+.weather-foreground__rain i {
+  top: -18vh;
+  left: var(--x);
+  width: 1px;
+  height: var(--length);
+  border-radius: 999px;
+  background: linear-gradient(180deg, transparent, rgba(221, 235, 237, 0.36) 52%, rgba(221, 235, 237, 0.08));
+  box-shadow: 0 0 4px rgba(211, 231, 233, 0.12);
+  animation: archive-glass-rain var(--duration) linear var(--delay) infinite;
+}
+
+.weather-foreground__snow i {
+  top: -1rem;
+  left: var(--x);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: rgba(247, 247, 237, 0.78);
+  box-shadow: 0 0 5px rgba(246, 245, 225, 0.28);
+  animation: archive-foreground-snow var(--duration) linear var(--delay) infinite;
+}
+
+.weather-foreground__fog {
+  background:
+    linear-gradient(90deg, rgba(191, 200, 192, 0.13), transparent 16%, transparent 84%, rgba(191, 200, 192, 0.13)),
+    linear-gradient(180deg, rgba(187, 196, 189, 0.09), transparent 19%, transparent 78%, rgba(187, 196, 189, 0.11));
+  filter: blur(7px);
+}
+
+.weather-foreground__flash {
+  background: rgba(215, 228, 233, 0.16);
+}
+
+body[data-weather-effects="on"][data-weather="rain"] .weather-foreground__rain,
+body[data-weather-effects="on"][data-weather="storm"] .weather-foreground__rain {
+  visibility: visible;
+  opacity: 0.72;
+}
+
+body[data-weather-effects="on"][data-weather="snow"] .weather-foreground__snow {
+  visibility: visible;
+  opacity: 0.72;
+}
+
+body[data-weather-effects="on"][data-weather="fog"] .weather-foreground__fog {
+  visibility: visible;
+  opacity: 1;
+}
+
+body[data-weather-effects="on"][data-weather="storm"] .weather-foreground__flash {
+  visibility: visible;
+  animation: archive-foreground-lightning 9s steps(1, end) infinite;
+}
+
+body[data-weather-intensity="light"] .weather-foreground__rain i:nth-child(n + 5),
+body[data-weather-intensity="light"] .weather-foreground__snow i:nth-child(n + 7),
+body[data-weather-intensity="moderate"] .weather-foreground__rain i:nth-child(n + 7),
+body[data-weather-intensity="moderate"] .weather-foreground__snow i:nth-child(n + 10) {
+  display: none;
 }
 
 @keyframes archive-rain {
@@ -280,6 +376,57 @@ body[data-solar="night"][data-weather="storm"] .scene__weather-filter {
   74% {
     opacity: 0.08;
     background: rgba(214, 227, 232, 0.4);
+  }
+}
+
+@keyframes archive-glass-rain {
+  0%,
+  14% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scaleY(0.55);
+  }
+  20% {
+    opacity: 0.44;
+  }
+  58% {
+    opacity: 0.24;
+  }
+  72%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 124vh, 0) scaleY(1.08);
+  }
+}
+
+@keyframes archive-foreground-snow {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -3vh, 0) rotate(0deg);
+  }
+  12% {
+    opacity: 0.58;
+  }
+  82% {
+    opacity: 0.42;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--drift), 106vh, 0) rotate(190deg);
+  }
+}
+
+@keyframes archive-foreground-lightning {
+  0%,
+  72%,
+  75%,
+  100% {
+    opacity: 0;
+  }
+  73% {
+    opacity: 0.42;
+  }
+  74% {
+    opacity: 0.08;
   }
 }
 
@@ -352,7 +499,15 @@ body[data-solar="night"][data-weather="storm"] .scene__weather-filter {
   letter-spacing: 0.08em;
 }
 
-.environment__location-button {
+.environment__weather-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.72rem;
+}
+
+.environment__location-button,
+.environment__effects-button {
   margin-top: 0.12rem;
   padding: 0 0 0.14rem;
   cursor: pointer;
@@ -370,12 +525,15 @@ body[data-solar="night"][data-weather="storm"] .scene__weather-filter {
 }
 
 .environment__location-button:hover,
-.environment__location-button:focus-visible {
+.environment__location-button:focus-visible,
+.environment__effects-button:hover,
+.environment__effects-button:focus-visible {
   color: var(--ink);
   border-color: var(--focus);
 }
 
-.environment__location-button:focus-visible {
+.environment__location-button:focus-visible,
+.environment__effects-button:focus-visible {
   outline: 1px solid var(--focus);
   outline-offset: 0.3rem;
 }
@@ -386,6 +544,10 @@ body[data-solar="night"][data-weather="storm"] .scene__weather-filter {
 }
 
 body[data-weather-status="connected"] .environment__location-button {
+  opacity: 0.56;
+}
+
+.environment__effects-button[aria-pressed="false"] {
   opacity: 0.56;
 }
 
@@ -670,6 +832,16 @@ body.is-previewing .scene__image {
     font-size: 0.42rem;
   }
 
+  .environment__effects-button {
+    font-size: 0.42rem;
+  }
+
+  .weather-foreground__rain i:nth-child(4),
+  .weather-foreground__rain i:nth-child(6),
+  .weather-foreground__snow i:nth-child(even) {
+    display: none;
+  }
+
   .environment time {
     font-size: 0.9rem;
   }
@@ -769,5 +941,14 @@ body.is-previewing .scene__image {
     transition-duration: 0.001ms !important;
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
+  }
+
+  .scene__rain,
+  .scene__snow,
+  .scene__lightning,
+  .weather-foreground__rain,
+  .weather-foreground__snow,
+  .weather-foreground__flash {
+    display: none !important;
   }
 }

@@ -2,9 +2,11 @@
   "use strict";
 
   var STORAGE_KEY = "the-archive-weather-location-v1";
+  var CACHE_KEY = "the-archive-weather-current-v1";
   var WEATHER_ENDPOINT = "https://api.open-meteo.com/v1/forecast";
   var LOCATION_ENDPOINT = "https://api.bigdatacloud.net/data/reverse-geocode-client";
   var REQUEST_TIMEOUT = 12000;
+  var CACHE_TTL = 15 * 60 * 1000;
 
   var WEATHER_CODES = {
     0: { condition: "clear", label: "CLEAR" },
@@ -58,6 +60,68 @@
     } catch (error) {
       // Weather still works for this visit when storage is unavailable.
     }
+  }
+
+  function readCachedWeather(location) {
+    try {
+      var value = window.localStorage.getItem(CACHE_KEY);
+      var cached = value ? JSON.parse(value) : null;
+      var sameLocation =
+        cached &&
+        cached.location &&
+        cached.location.latitude === location.latitude &&
+        cached.location.longitude === location.longitude;
+      var isFresh = cached && Date.now() - Number(cached.savedAt) < CACHE_TTL;
+
+      return sameLocation && isFresh ? cached.weather : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function saveCachedWeather(location, weather) {
+    try {
+      window.localStorage.setItem(
+        CACHE_KEY,
+        JSON.stringify({
+          savedAt: Date.now(),
+          location: {
+            latitude: location.latitude,
+            longitude: location.longitude
+          },
+          weather: weather
+        })
+      );
+    } catch (error) {
+      // A missing cache never prevents live weather from working.
+    }
+  }
+
+  function weatherIntensity(condition, weatherCode, current) {
+    var precipitation = Number(current.precipitation) || 0;
+    var rain = (Number(current.rain) || 0) + (Number(current.showers) || 0);
+    var snowfall = Number(current.snowfall) || 0;
+    var windSpeed = Number(current.wind_speed_10m) || 0;
+
+    if (condition === "storm") {
+      return weatherCode === 99 || precipitation >= 5 || windSpeed >= 55 ? "heavy" : "moderate";
+    }
+    if (condition === "rain") {
+      if (rain >= 5 || precipitation >= 7.5) {
+        return "heavy";
+      }
+      return rain >= 1 || precipitation >= 1 ? "moderate" : "light";
+    }
+    if (condition === "snow") {
+      if (snowfall >= 1.5) {
+        return "heavy";
+      }
+      return snowfall >= 0.3 ? "moderate" : "light";
+    }
+    if (condition === "fog") {
+      return "light";
+    }
+    return "none";
   }
 
   function fetchJson(url) {
@@ -132,7 +196,13 @@
       });
   }
 
-  function currentWeather(location) {
+  function currentWeather(location, bypassCache) {
+    var cachedWeather = !bypassCache && readCachedWeather(location);
+
+    if (cachedWeather) {
+      return Promise.resolve(cachedWeather);
+    }
+
     var currentFields = [
       "temperature_2m",
       "relative_humidity_2m",
@@ -165,7 +235,7 @@
       var code = Number(current.weather_code);
       var description = WEATHER_CODES[code] || { condition: "cloudy", label: "CURRENT WEATHER" };
 
-      return {
+      var weather = {
         condition: description.condition,
         label: description.label,
         temperature: Number(current.temperature_2m),
@@ -180,6 +250,10 @@
         observedAt: current.time,
         timezone: data.timezone || "auto"
       };
+
+      weather.intensity = weatherIntensity(description.condition, code, current);
+      saveCachedWeather(location, weather);
+      return weather;
     });
   }
 
@@ -200,7 +274,7 @@
         return resolveLocationName(latitude, longitude).then(function (name) {
           weatherProvider.location = { latitude: latitude, longitude: longitude, name: name };
           saveLocation(weatherProvider.location);
-          return currentWeather(weatherProvider.location);
+          return currentWeather(weatherProvider.location, true);
         });
       });
     },
@@ -209,7 +283,7 @@
       if (!this.hasLocation()) {
         return Promise.reject(weatherError("LOCATION_REQUIRED", "Location permission is required."));
       }
-      return currentWeather(this.location);
+      return currentWeather(this.location, false);
     }
   };
 
