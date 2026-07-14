@@ -162,6 +162,13 @@ textarea {
   margin-top: 28px;
 }
 
+.admin-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .admin-toolbar {
   padding-bottom: 16px;
   border-bottom: 1px solid #333333;

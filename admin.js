@@ -28,6 +28,8 @@
   var itemList = document.getElementById("item-editor-list");
   var fileInput = document.getElementById("file-input");
   var saveButton = document.getElementById("save-button");
+  var publishedLink = document.getElementById("published-link");
+  var publishCheckVersion = 0;
 
   loginForm.addEventListener("submit", connect);
   saveButton.addEventListener("click", saveLibrary);
@@ -61,6 +63,8 @@
     if (!token) return;
     if (dirty && !window.confirm("Discard unsaved changes and reload from GitHub?")) return;
     setStatus("CONNECTING TO GITHUB...");
+    publishCheckVersion += 1;
+    publishedLink.hidden = true;
     setBusy(true);
     var wasConnected = Boolean(library);
 
@@ -334,7 +338,15 @@
       });
       dataSha = result.content && result.content.sha ? result.content.sha : dataSha;
       dirty = false;
-      setStatus("SAVED / GITHUB PAGES WILL REFRESH SHORTLY");
+      var folder = currentFolder();
+      var latestUrl = folder
+        ? "folder.html?folder=" + encodeURIComponent(folder.id)
+        : "library.html";
+      publishedLink.href = latestUrl;
+      publishedLink.textContent = "[ VIEW LATEST ]";
+      publishedLink.hidden = true;
+      setStatus("SAVED TO GITHUB / PUBLISHING...");
+      checkPublishedVersion(source);
     } catch (error) {
       setStatus(formatGitHubError(error, "Save failed."), true);
     } finally {
@@ -349,6 +361,8 @@
     dataSha = "";
     connectedUser = "";
     dirty = false;
+    publishCheckVersion += 1;
+    publishedLink.hidden = true;
     editor.hidden = true;
     loginPanel.hidden = false;
     connectionSummary.textContent = "";
@@ -490,5 +504,37 @@
   function setStatus(message, isError) {
     status.textContent = message;
     status.classList.toggle("is-error", Boolean(isError));
+  }
+
+  async function checkPublishedVersion(expectedSource) {
+    var checkVersion = ++publishCheckVersion;
+    var attempts = 18;
+
+    for (var attempt = 0; attempt < attempts; attempt += 1) {
+      await delay(attempt === 0 ? 1500 : 5000);
+      if (checkVersion !== publishCheckVersion) return;
+
+      try {
+        var response = await fetch(DATA_PATH + "?publish-check=" + Date.now(), { cache: "no-store" });
+        var publicSource = response.ok ? await response.text() : "";
+        if (publicSource.trim() === expectedSource.trim()) {
+          setStatus("PUBLISHED / LIVE");
+          publishedLink.hidden = false;
+          return;
+        }
+      } catch (error) {
+        // Temporary Pages or network failures are retried until the timeout below.
+      }
+    }
+
+    if (checkVersion === publishCheckVersion) {
+      setStatus("SAVED / PUBLIC PAGE IS STILL DEPLOYING");
+      publishedLink.textContent = "[ CHECK PUBLIC PAGE ]";
+      publishedLink.hidden = false;
+    }
+  }
+
+  function delay(milliseconds) {
+    return new Promise(function (resolve) { window.setTimeout(resolve, milliseconds); });
   }
 })();
