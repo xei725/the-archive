@@ -1,7 +1,22 @@
 window.EZ_LIBRARY = {
   "folderIcon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAYAAADtaU2/AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABoSURBVEhL7ZJRCoAwDEN79N582pr9iDjFtBPWMHgMOh4pk9+ktf14rmkzquqkZSTttFmafCQ7097Qm6fFKzxsyiC079f8ldBOFfv1QAKhrcbxhHbNxveDbEJbnyue0FbjeEK7YuP8iGxT5E2acu9mSwAAAABJRU5ErkJggg==",
   "folders": [
-    { "id": "whats-new", "title": "What's New", "lines": ["What's New"], "items": [] },
+    {
+      "id": "whats-new",
+      "title": "What's New",
+      "lines": ["What's New"],
+      "items": [
+        {
+          "id": "file-archive-hall-test",
+          "title": "Archive Hall — image resource test",
+          "type": "file",
+          "description": "A local image resource used to verify EZ Library file browsing and preview.",
+          "content": "",
+          "url": "assets/images/archive-hall-room.png",
+          "mimeType": "image/png"
+        }
+      ]
+    },
     { "id": "bombs-destruction-vandalism", "title": "Bombs, Destruction & Vandalism", "lines": ["Bombs, Destruction &", "Vandalism"], "items": [] },
     { "id": "underground-hacking-phreaking", "title": "Underground Hacking and Phreaking", "lines": ["Underground", "Hacking and", "Phreaking"], "items": [] },
     { "id": "legal-system", "title": "Legal System", "lines": ["Legal System"], "items": [] },
