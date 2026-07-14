@@ -88,6 +88,7 @@ a {
 
 .corridor-wordmark,
 .corridor-count,
+.corridor-index,
 .corridor-filters,
 .corridor-footer {
   font-family: var(--mono-font);
@@ -128,13 +129,56 @@ a {
   white-space: nowrap;
 }
 
-.corridor-filters {
+.corridor-index {
   grid-column: 2;
   grid-row: 2;
+  position: relative;
+  justify-self: center;
+}
+
+.corridor-index__toggle {
+  padding: 0.35rem 0.2rem 0.45rem;
+  border-bottom: 1px solid rgba(214, 164, 75, 0.5);
+  color: rgba(233, 223, 202, 0.68);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.68rem;
+  letter-spacing: 0.19em;
+  transition:
+    color 160ms ease,
+    border-color 160ms ease;
+}
+
+.corridor-index__toggle span:last-child {
+  color: var(--corridor-ink);
+}
+
+.corridor-index__toggle:hover,
+.corridor-index__toggle:focus-visible,
+.corridor-index__toggle[aria-expanded="true"] {
+  color: var(--corridor-ink);
+  border-bottom-color: var(--corridor-accent);
+}
+
+.corridor-filters {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.6rem);
+  left: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(1.2rem, 3vw, 3rem);
+  gap: clamp(1.15rem, 2.5vw, 2.4rem);
+  width: max-content;
+  padding: 0.65rem 0.9rem 0.55rem;
+  transform: translateX(-50%);
+  border: 1px solid rgba(184, 139, 70, 0.38);
+  background: rgba(9, 9, 7, 0.97);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.52);
+}
+
+.corridor-filters[hidden] {
+  display: none;
 }
 
 .corridor-filters button {
@@ -162,6 +206,7 @@ a {
 }
 
 .corridor-filters button:focus-visible,
+.corridor-index__toggle:focus-visible,
 .corridor-wordmark:focus-visible,
 .corridor-footer a:focus-visible,
 .photo-record__button:focus-visible,
@@ -716,23 +761,25 @@ a {
     font-size: 1.25rem;
   }
 
-  .corridor-filters {
+  .corridor-index {
     grid-column: 1 / -1;
     grid-row: 3;
-    justify-content: flex-start;
-    gap: 1.3rem;
-    padding-bottom: 0.1rem;
-    overflow-x: auto;
-    scrollbar-width: none;
+    justify-self: center;
   }
 
-  .corridor-filters::-webkit-scrollbar {
-    display: none;
+  .corridor-index__toggle {
+    font-size: 0.62rem;
+  }
+
+  .corridor-filters {
+    width: min(92vw, 25rem);
+    gap: clamp(0.7rem, 4vw, 1.35rem);
   }
 
   .corridor-filters button {
     flex: 0 0 auto;
-    font-size: 0.64rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.13em;
   }
 
   .corridor-architecture::before {

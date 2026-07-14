@@ -24,12 +24,27 @@
         <h1>PHOTO CORRIDOR</h1>
         <p class="corridor-count" id="corridor-count" aria-live="polite">0 RECORDS</p>
 
-        <nav class="corridor-filters" aria-label="Filter photographs">
-          <button class="is-active" type="button" data-filter="all" aria-pressed="true">ALL</button>
-          <button type="button" data-filter="real" aria-pressed="false">REAL</button>
-          <button type="button" data-filter="archive" aria-pressed="false">ARCHIVE</button>
-          <button type="button" data-filter="anomalies" aria-pressed="false">ANOMALIES</button>
-        </nav>
+        <div class="corridor-index">
+          <button
+            class="corridor-index__toggle"
+            id="corridor-index-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="corridor-index-filters"
+          >
+            INDEX <span aria-hidden="true">/</span> <span id="corridor-index-current">ALL</span>
+          </button>
+          <nav
+            class="corridor-filters"
+            id="corridor-index-filters"
+            aria-label="Photograph index"
+            hidden
+          >
+            <button class="is-active" type="button" data-filter="all" aria-pressed="true">ALL RECORDS</button>
+            <button type="button" data-filter="real" aria-pressed="false">PERSONAL</button>
+            <button type="button" data-filter="archive" aria-pressed="false">ARCHIVE</button>
+          </nav>
+        </div>
       </header>
 
       <section class="corridor-scene" aria-label="Archive photograph corridor">

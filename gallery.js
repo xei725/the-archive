@@ -6,6 +6,9 @@
     ? window.PHOTO_CORRIDOR_RECORDS.slice()
     : [];
   var filterButtons = Array.prototype.slice.call(document.querySelectorAll("[data-filter]"));
+  var indexToggle = document.getElementById("corridor-index-toggle");
+  var indexFilters = document.getElementById("corridor-index-filters");
+  var indexCurrent = document.getElementById("corridor-index-current");
   var recordContainer = document.getElementById("corridor-records");
   var recordCount = document.getElementById("corridor-count");
   var sentinel = document.getElementById("corridor-sentinel");
@@ -21,10 +24,15 @@
   var activeFilter = "all";
   var sentinelObserver = null;
 
-  var CATEGORY_LABELS = {
-    real: "REAL PHOTOGRAPH",
-    archive: "ARCHIVE RECORD",
-    anomalies: "ANOMALY RECORD"
+  var FILTER_LABELS = {
+    all: "ALL",
+    real: "PERSONAL",
+    archive: "ARCHIVE"
+  };
+
+  var FILTER_ARIA_LABELS = {
+    real: "Personal photographs",
+    archive: "Archive photographs"
   };
 
   function createTextElement(tagName, className, value) {
@@ -92,8 +100,13 @@
       "aria-label",
       activeFilter === "all"
         ? "All photographs, " + total + " records"
-        : CATEGORY_LABELS[activeFilter] + ", " + total + " records"
+        : FILTER_ARIA_LABELS[activeFilter] + ", " + total + " records"
     );
+  }
+
+  function setIndexOpen(isOpen) {
+    indexToggle.setAttribute("aria-expanded", String(isOpen));
+    indexFilters.hidden = !isOpen;
   }
 
   function updateSentinel() {
@@ -142,6 +155,8 @@
       button.setAttribute("aria-pressed", String(selected));
     });
 
+    indexCurrent.textContent = FILTER_LABELS[filter] || "ALL";
+
     updateCount();
     renderNextBatch();
   }
@@ -161,7 +176,7 @@
     dialogImage.height = record.height;
     dialogTitle.textContent = record.title;
     dialogDate.textContent = record.date;
-    dialogCategory.textContent = CATEGORY_LABELS[record.category] || "ARCHIVE RECORD";
+    dialogCategory.textContent = "COLLECTION RECORD";
     dialogDescription.textContent = record.description;
 
     if (typeof dialog.showModal === "function") {
@@ -174,7 +189,25 @@
   filterButtons.forEach(function (button) {
     button.addEventListener("click", function () {
       setFilter(button.dataset.filter);
+      setIndexOpen(false);
     });
+  });
+
+  indexToggle.addEventListener("click", function () {
+    setIndexOpen(indexToggle.getAttribute("aria-expanded") !== "true");
+  });
+
+  document.addEventListener("click", function (event) {
+    if (indexToggle.getAttribute("aria-expanded") === "true" && !event.target.closest(".corridor-index")) {
+      setIndexOpen(false);
+    }
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && indexToggle.getAttribute("aria-expanded") === "true") {
+      setIndexOpen(false);
+      indexToggle.focus();
+    }
   });
 
   recordContainer.addEventListener("click", function (event) {
