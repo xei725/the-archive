@@ -11,10 +11,12 @@
     <title>The Archive</title>
     <link rel="preload" as="image" href="assets/images/archive-hall-room.png" />
     <link rel="stylesheet" href="styles.css" />
+    <script src="weather-provider.js" defer></script>
     <script src="environment.js" defer></script>
+    <script src="audio-system.js" defer></script>
     <script src="script.js" defer></script>
   </head>
-  <body data-period="day" data-weather="unavailable">
+  <body data-period="day" data-solar="day" data-weather="unavailable" data-weather-status="location-required">
     <a class="skip-link" href="#room-navigation">跳到房间入口</a>
 
     <main class="archive-hall" id="archive-hall">
@@ -28,6 +30,14 @@
         />
         <div class="scene__vignette"></div>
         <div class="scene__grain"></div>
+        <div class="scene__environment">
+          <div class="scene__sunlight"></div>
+          <div class="scene__weather-filter"></div>
+          <div class="scene__rain scene__rain--far"></div>
+          <div class="scene__rain scene__rain--near"></div>
+          <div class="scene__snow"></div>
+          <div class="scene__lightning"></div>
+        </div>
       </div>
 
       <header class="hall-header">
@@ -41,8 +51,16 @@
           </div>
           <div class="environment__weather">
             <span class="environment__label">WEATHER</span>
-            <span class="environment__value" id="weather-value">NOT CONNECTED</span>
+            <span class="environment__value" id="weather-value">LOCATION REQUIRED</span>
             <span class="environment__meta" id="weather-location" hidden></span>
+            <button
+              class="environment__location-button"
+              id="location-button"
+              type="button"
+              aria-label="Use your location for live weather"
+            >
+              USE MY LOCATION
+            </button>
           </div>
         </section>
       </header>

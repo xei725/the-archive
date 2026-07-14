@@ -14,6 +14,7 @@
   var roomControls = Array.prototype.slice.call(document.querySelectorAll("[data-room]"));
   var soundToggle = document.getElementById("sound-toggle");
   var soundLabel = document.getElementById("sound-label");
+  var locationButton = document.getElementById("location-button");
   var previewTimer = null;
   var transitionLocked = false;
 
@@ -23,6 +24,7 @@
     weatherValueElement: document.getElementById("weather-value"),
     weatherLocationElement: document.getElementById("weather-location")
   });
+  var archiveAudio = new window.ArchiveAudio();
 
   function setSceneFocus(room, element) {
     var fallback = ROOM_FOCUS[room] || { x: "50%", y: "50%" };
@@ -95,96 +97,73 @@
     });
   });
 
-  function AmbientRoomTone() {
-    this.context = null;
-    this.output = null;
-    this.noise = null;
-    this.hum = null;
-    this.enabled = false;
-  }
-
-  AmbientRoomTone.prototype.create = function () {
-    var AudioContext = window.AudioContext || window.webkitAudioContext;
-
-    if (!AudioContext) {
-      return false;
-    }
-
-    this.context = new AudioContext();
-    this.output = this.context.createGain();
-    this.output.gain.value = 0;
-    this.output.connect(this.context.destination);
-
-    var bufferLength = this.context.sampleRate * 2;
-    var noiseBuffer = this.context.createBuffer(1, bufferLength, this.context.sampleRate);
-    var samples = noiseBuffer.getChannelData(0);
-
-    for (var index = 0; index < bufferLength; index += 1) {
-      samples[index] = Math.random() * 2 - 1;
-    }
-
-    var lowPass = this.context.createBiquadFilter();
-    lowPass.type = "lowpass";
-    lowPass.frequency.value = 420;
-
-    this.noise = this.context.createBufferSource();
-    this.noise.buffer = noiseBuffer;
-    this.noise.loop = true;
-    this.noise.connect(lowPass);
-    lowPass.connect(this.output);
-    this.noise.start();
-
-    var humGain = this.context.createGain();
-    humGain.gain.value = 0.13;
-
-    this.hum = this.context.createOscillator();
-    this.hum.type = "sine";
-    this.hum.frequency.value = 50;
-    this.hum.connect(humGain);
-    humGain.connect(this.output);
-    this.hum.start();
-
-    return true;
-  };
-
-  AmbientRoomTone.prototype.toggle = function () {
-    var roomTone = this;
-
-    if (!this.context && !this.create()) {
-      return Promise.resolve(false);
-    }
-
-    return this.context.resume().then(function () {
-      var now = roomTone.context.currentTime;
-      var nextValue = roomTone.enabled ? 0 : 0.012;
-
-      roomTone.output.gain.cancelScheduledValues(now);
-      roomTone.output.gain.setValueAtTime(roomTone.output.gain.value, now);
-      roomTone.output.gain.linearRampToValueAtTime(nextValue, now + 0.28);
-      roomTone.enabled = !roomTone.enabled;
-      return roomTone.enabled;
-    });
-  };
-
-  var roomTone = new AmbientRoomTone();
-
   soundToggle.addEventListener("click", function () {
-    roomTone.toggle().then(function (enabled) {
-      soundToggle.setAttribute("aria-pressed", String(enabled));
-      soundToggle.setAttribute("aria-label", enabled ? "关闭大厅环境声" : "开启大厅环境声");
-      soundLabel.textContent = enabled ? "SOUND ON" : "SOUND OFF";
+    archiveAudio
+      .toggle()
+      .then(function (enabled) {
+        soundToggle.setAttribute("aria-pressed", String(enabled));
+        soundToggle.setAttribute("aria-label", enabled ? "关闭大厅氛围音乐和环境声" : "开启大厅氛围音乐和环境声");
+        soundLabel.textContent = enabled ? "SOUND ON" : "SOUND OFF";
+        status.textContent = enabled ? "ATMOSPHERE / ON" : "";
 
-      if (!roomTone.context) {
+        if (!archiveAudio.context) {
+          status.textContent = "SOUND / UNAVAILABLE";
+        }
+      })
+      .catch(function () {
         status.textContent = "SOUND / UNAVAILABLE";
-      }
-    });
+      });
   });
 
-  window.addEventListener("pageshow", function () {
+  locationButton.addEventListener("click", function () {
+    locationButton.disabled = true;
+    locationButton.textContent = "LOCATING...";
+    status.textContent = "WEATHER / REQUESTING LOCATION";
+
+    environment
+      .connectWeather()
+      .then(function () {
+        status.textContent = "WEATHER / CONNECTED";
+      })
+      .catch(function (error) {
+        status.textContent = error && error.archiveCode === "PERMISSION_DENIED" ? "WEATHER / LOCATION BLOCKED" : "WEATHER / UNAVAILABLE";
+      })
+      .finally(function () {
+        locationButton.disabled = false;
+      });
+  });
+
+  document.addEventListener("archive:weatherchange", function (event) {
+    archiveAudio.setWeather(event.detail.condition);
+  });
+
+  document.addEventListener("archive:weatherstate", function (event) {
+    var state = event.detail.state;
+
+    if (state === "connected") {
+      locationButton.textContent = "UPDATE LOCATION";
+      return;
+    }
+    if (state === "locating") {
+      locationButton.textContent = "LOCATING...";
+      return;
+    }
+    if (state === "syncing") {
+      locationButton.textContent = "SYNCING...";
+      return;
+    }
+    locationButton.textContent = state === "permission-denied" ? "RETRY LOCATION" : "USE MY LOCATION";
+  });
+
+  window.addEventListener("pageshow", function (event) {
     transitionLocked = false;
     document.body.classList.remove("is-transitioning", "is-previewing");
     status.textContent = "";
     resetSceneFocus();
+
+    if (event.persisted) {
+      environment.start();
+    }
   });
 
   window.addEventListener("pagehide", function () {

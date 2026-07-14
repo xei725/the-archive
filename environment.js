@@ -57,6 +57,10 @@
     return WEATHER_ALIASES[key] || "unavailable";
   }
 
+  function emit(name, detail) {
+    document.dispatchEvent(new CustomEvent(name, { detail: detail }));
+  }
+
   function Clock(options) {
     this.timeElement = options.timeElement;
     this.dateElement = options.dateElement;
@@ -76,6 +80,7 @@
 
   Clock.prototype.start = function () {
     var clock = this;
+    this.stop();
     this.render();
     this.timer = window.setInterval(function () {
       clock.render();
@@ -106,11 +111,51 @@
     return null;
   };
 
-  WeatherSystem.prototype.renderUnavailable = function () {
+  WeatherSystem.prototype.hasLocation = function () {
+    if (!this.provider) {
+      return false;
+    }
+
+    if (typeof this.provider.hasLocation === "function") {
+      return this.provider.hasLocation();
+    }
+
+    return true;
+  };
+
+  WeatherSystem.prototype.setState = function (state, message, weather) {
+    document.body.dataset.weatherStatus = state;
+    emit("archive:weatherstate", {
+      state: state,
+      message: message || "",
+      weather: weather || null
+    });
+  };
+
+  WeatherSystem.prototype.showMessage = function (message, state) {
     document.body.dataset.weather = "unavailable";
-    this.valueElement.textContent = "NOT CONNECTED";
+    this.valueElement.textContent = message;
     this.locationElement.textContent = "";
     this.locationElement.hidden = true;
+    this.setState(state, message);
+  };
+
+  WeatherSystem.prototype.showError = function (error) {
+    var code = error && error.archiveCode;
+
+    if (code === "PERMISSION_DENIED") {
+      this.showMessage("LOCATION BLOCKED", "permission-denied");
+      return;
+    }
+    if (code === "LOCATION_REQUIRED") {
+      this.showMessage("LOCATION REQUIRED", "location-required");
+      return;
+    }
+    if (code === "LOCATION_UNAVAILABLE" || code === "UNSUPPORTED") {
+      this.showMessage("LOCATION UNAVAILABLE", "location-error");
+      return;
+    }
+    this.showMessage("WEATHER OFFLINE", "weather-error");
   };
 
   WeatherSystem.prototype.render = function (weather) {
@@ -119,7 +164,7 @@
     }
 
     var condition = normalizeCondition(weather.condition);
-    var conditionLabel = String(weather.condition).trim().toUpperCase();
+    var conditionLabel = String(weather.label || weather.condition).trim().toUpperCase();
     var temperature = Number(weather.temperature);
     var unit = weather.unit === "F" ? "F" : "C";
     var value = conditionLabel;
@@ -129,9 +174,12 @@
     }
 
     document.body.dataset.weather = condition;
+    document.body.dataset.solar = weather.isDay === false ? "night" : "day";
     this.valueElement.textContent = value;
     this.locationElement.textContent = weather.location ? String(weather.location).toUpperCase() : "";
     this.locationElement.hidden = !this.locationElement.textContent;
+    this.setState("connected", value, weather);
+    emit("archive:weatherchange", weather);
   };
 
   WeatherSystem.prototype.refresh = function () {
@@ -139,11 +187,17 @@
     var weatherSystem = this;
 
     if (!providerMethod) {
-      this.renderUnavailable();
+      this.showMessage("NOT CONNECTED", "provider-missing");
+      return Promise.resolve(null);
+    }
+
+    if (!this.hasLocation()) {
+      this.showMessage("LOCATION REQUIRED", "location-required");
       return Promise.resolve(null);
     }
 
     this.valueElement.textContent = "SYNCING";
+    this.setState("syncing", "SYNCING");
 
     return Promise.resolve()
       .then(function () {
@@ -153,20 +207,52 @@
         weatherSystem.render(weather);
         return weather;
       })
-      .catch(function () {
-        weatherSystem.renderUnavailable();
+      .catch(function (error) {
+        weatherSystem.showError(error);
         return null;
       });
   };
 
-  WeatherSystem.prototype.start = function () {
+  WeatherSystem.prototype.connect = function () {
     var weatherSystem = this;
+
+    if (!this.provider || typeof this.provider.connect !== "function") {
+      var missingError = new Error("Weather provider cannot request a location.");
+      missingError.archiveCode = "UNSUPPORTED";
+      this.showError(missingError);
+      return Promise.reject(missingError);
+    }
+
+    this.valueElement.textContent = "LOCATING";
+    this.setState("locating", "LOCATING");
+
+    return this.provider
+      .connect()
+      .then(function (weather) {
+        weatherSystem.render(weather);
+        weatherSystem.ensureTimer();
+        return weather;
+      })
+      .catch(function (error) {
+        weatherSystem.showError(error);
+        throw error;
+      });
+  };
+
+  WeatherSystem.prototype.ensureTimer = function () {
+    var weatherSystem = this;
+    window.clearInterval(this.timer);
+    this.timer = window.setInterval(function () {
+      weatherSystem.refresh();
+    }, 15 * 60 * 1000);
+  };
+
+  WeatherSystem.prototype.start = function () {
+    this.stop();
     this.refresh();
 
-    if (this.getProviderMethod()) {
-      this.timer = window.setInterval(function () {
-        weatherSystem.refresh();
-      }, 15 * 60 * 1000);
+    if (this.getProviderMethod() && this.hasLocation()) {
+      this.ensureTimer();
     }
   };
 
@@ -199,6 +285,10 @@
 
   ArchiveEnvironment.prototype.refreshWeather = function () {
     return this.weather.refresh();
+  };
+
+  ArchiveEnvironment.prototype.connectWeather = function () {
+    return this.weather.connect();
   };
 
   window.ArchiveEnvironment = ArchiveEnvironment;

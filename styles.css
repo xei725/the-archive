@@ -106,7 +106,8 @@ body[data-period="dawn"] .scene__image {
 }
 
 .scene__vignette,
-.scene__grain {
+.scene__grain,
+.scene__environment {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -125,6 +126,161 @@ body[data-period="dawn"] .scene__image {
     repeating-radial-gradient(circle at 73% 61%, transparent 0, rgba(0, 0, 0, 0.34) 0.7px, transparent 1.4px);
   background-size: 5px 5px, 7px 7px;
   mix-blend-mode: soft-light;
+}
+
+.scene__environment {
+  overflow: hidden;
+}
+
+.scene__sunlight,
+.scene__weather-filter,
+.scene__lightning {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.scene__sunlight {
+  background:
+    linear-gradient(118deg, rgba(255, 225, 162, 0.21), transparent 38%),
+    radial-gradient(ellipse at 52% 31%, rgba(236, 223, 175, 0.32), transparent 38%);
+  mix-blend-mode: screen;
+}
+
+.scene__weather-filter {
+  background: rgba(44, 59, 61, 0.08);
+}
+
+.scene__rain,
+.scene__snow {
+  position: absolute;
+  top: 23%;
+  left: 41%;
+  width: 18%;
+  height: 26%;
+  opacity: 0;
+  mask-image: linear-gradient(180deg, transparent, #000 11%, #000 82%, transparent);
+  transition: opacity 900ms ease;
+}
+
+.scene__rain {
+  background-image: linear-gradient(
+    102deg,
+    transparent 0,
+    transparent 47%,
+    rgba(214, 232, 233, 0.48) 48%,
+    transparent 50%,
+    transparent 100%
+  );
+  background-size: 31px 76px;
+  mix-blend-mode: screen;
+  animation: archive-rain 0.75s linear infinite;
+}
+
+.scene__rain--far {
+  filter: blur(0.5px);
+  animation-duration: 1.15s;
+}
+
+.scene__rain--near {
+  background-size: 43px 108px;
+  filter: blur(0.15px);
+  animation-duration: 0.62s;
+}
+
+.scene__snow {
+  background-image:
+    radial-gradient(circle, rgba(245, 247, 237, 0.82) 0 1px, transparent 1.4px),
+    radial-gradient(circle, rgba(245, 247, 237, 0.58) 0 1.2px, transparent 1.6px);
+  background-position: 0 0, 43px 61px;
+  background-size: 74px 88px, 102px 126px;
+  mix-blend-mode: screen;
+  animation: archive-snow 8s linear infinite;
+}
+
+body[data-weather="clear"][data-solar="day"] .scene__sunlight {
+  opacity: 0.42;
+}
+
+body[data-weather="cloudy"] .scene__weather-filter {
+  opacity: 0.34;
+  background: rgba(48, 63, 66, 0.3);
+}
+
+body[data-weather="fog"] .scene__weather-filter {
+  opacity: 0.5;
+  background: rgba(150, 158, 148, 0.3);
+  backdrop-filter: saturate(0.72) contrast(0.92);
+}
+
+body[data-weather="rain"] .scene__weather-filter,
+body[data-weather="storm"] .scene__weather-filter {
+  opacity: 0.52;
+  background: rgba(34, 50, 56, 0.42);
+}
+
+body[data-weather="rain"] .scene__rain,
+body[data-weather="storm"] .scene__rain {
+  opacity: 0.52;
+}
+
+body[data-weather="snow"] .scene__weather-filter {
+  opacity: 0.3;
+  background: rgba(181, 191, 190, 0.23);
+}
+
+body[data-weather="snow"] .scene__snow {
+  opacity: 0.9;
+}
+
+body[data-weather="storm"] .scene__lightning {
+  animation: archive-lightning 9s steps(1, end) infinite;
+}
+
+body[data-solar="night"] .scene__weather-filter {
+  opacity: 0.3;
+  background: rgba(18, 29, 40, 0.38);
+}
+
+body[data-solar="night"][data-weather="rain"] .scene__weather-filter,
+body[data-solar="night"][data-weather="storm"] .scene__weather-filter {
+  opacity: 0.56;
+}
+
+@keyframes archive-rain {
+  from {
+    background-position: 0 -270px;
+  }
+  to {
+    background-position: 42px 270px;
+  }
+}
+
+@keyframes archive-snow {
+  from {
+    background-position: 0 -100px, 43px -65px;
+  }
+  to {
+    background-position: 38px 330px, 7px 390px;
+  }
+}
+
+@keyframes archive-lightning {
+  0%,
+  72%,
+  75%,
+  100% {
+    opacity: 0;
+  }
+  73% {
+    opacity: 0.32;
+    background: rgba(214, 227, 232, 0.7);
+  }
+  74% {
+    opacity: 0.08;
+    background: rgba(214, 227, 232, 0.4);
+  }
 }
 
 .hall-header {
@@ -166,6 +322,10 @@ body[data-period="dawn"] .scene__image {
   gap: 0.26rem;
 }
 
+.environment__weather {
+  pointer-events: auto;
+}
+
 .environment__label {
   position: absolute;
   width: 1px;
@@ -190,6 +350,43 @@ body[data-period="dawn"] .scene__image {
   font-family: var(--mono-font);
   font-size: 0.58rem;
   letter-spacing: 0.08em;
+}
+
+.environment__location-button {
+  margin-top: 0.12rem;
+  padding: 0 0 0.14rem;
+  cursor: pointer;
+  color: rgba(243, 238, 227, 0.72);
+  background: transparent;
+  border-bottom: 1px solid rgba(243, 238, 227, 0.34);
+  font-family: var(--mono-font);
+  font-size: 0.49rem;
+  letter-spacing: 0.12em;
+  line-height: 1.3;
+  transition:
+    color 160ms ease,
+    border-color 160ms ease,
+    opacity 160ms ease;
+}
+
+.environment__location-button:hover,
+.environment__location-button:focus-visible {
+  color: var(--ink);
+  border-color: var(--focus);
+}
+
+.environment__location-button:focus-visible {
+  outline: 1px solid var(--focus);
+  outline-offset: 0.3rem;
+}
+
+.environment__location-button:disabled {
+  cursor: wait;
+  opacity: 0.5;
+}
+
+body[data-weather-status="connected"] .environment__location-button {
+  opacity: 0.56;
 }
 
 .environment__time .environment__meta {
@@ -386,6 +583,11 @@ body[data-period="dawn"] .scene__image {
   outline-offset: 0.55rem;
 }
 
+.sound-toggle[aria-pressed="true"] svg {
+  color: var(--focus);
+  filter: drop-shadow(0 0 0.42rem rgba(246, 220, 162, 0.45));
+}
+
 .hall-status {
   min-height: 1rem;
   margin: 0;
@@ -457,7 +659,15 @@ body.is-previewing .scene__image {
   }
 
   .environment__weather {
-    display: none;
+    max-width: 52vw;
+  }
+
+  .environment__value {
+    font-size: 0.66rem;
+  }
+
+  .environment__location-button {
+    font-size: 0.42rem;
   }
 
   .environment time {
