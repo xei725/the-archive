@@ -16,9 +16,13 @@
   var soundLabel = document.getElementById("sound-label");
   var locationButton = document.getElementById("location-button");
   var weatherEffectsToggle = document.getElementById("weather-effects-toggle");
+  var visitorIdElement = document.getElementById("visitor-id");
+  var visitorMemoryElement = document.getElementById("visitor-memory");
   var previewTimer = null;
   var transitionLocked = false;
   var WEATHER_EFFECTS_KEY = "the-archive-weather-effects-v1";
+  var VISITOR_MEMORY_KEY = "the-archive-visitor-memory-v1";
+  var VISITOR_SESSION_KEY = "the-archive-visitor-session-v1";
 
   var environment = new window.ArchiveEnvironment({
     timeElement: document.getElementById("local-time"),
@@ -27,6 +31,113 @@
     weatherLocationElement: document.getElementById("weather-location")
   });
   var archiveAudio = new window.ArchiveAudio();
+
+  function padNumber(value, length) {
+    return String(value).padStart(length, "0");
+  }
+
+  function createVisitorId() {
+    var value = Math.floor(Math.random() * 9000) + 1000;
+
+    if (window.crypto && window.crypto.getRandomValues) {
+      var values = new Uint32Array(1);
+      window.crypto.getRandomValues(values);
+      value = (values[0] % 9000) + 1000;
+    }
+
+    return padNumber(value, 4);
+  }
+
+  function readVisitorMemory() {
+    try {
+      var raw = window.localStorage.getItem(VISITOR_MEMORY_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function writeVisitorMemory(memory) {
+    try {
+      window.localStorage.setItem(VISITOR_MEMORY_KEY, JSON.stringify(memory));
+    } catch (error) {
+      // Visitor memory is optional and local-only.
+    }
+  }
+
+  function isNewSession() {
+    try {
+      if (window.sessionStorage.getItem(VISITOR_SESSION_KEY)) {
+        return false;
+      }
+      window.sessionStorage.setItem(VISITOR_SESSION_KEY, "active");
+      return true;
+    } catch (error) {
+      return true;
+    }
+  }
+
+  function formatLastAccess(value) {
+    var date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return "LAST ACCESS UNKNOWN";
+    }
+
+    return "LAST ACCESS " + date.toLocaleDateString("en-CA");
+  }
+
+  function updateVisitorDisplay(memory, previousLastVisit) {
+    visitorIdElement.textContent = "VISITOR " + memory.visitorId;
+
+    if (memory.visitCount <= 1) {
+      visitorMemoryElement.textContent = "FIRST ACCESS RECORDED";
+      return;
+    }
+
+    visitorMemoryElement.textContent = formatLastAccess(previousLastVisit || memory.firstVisit);
+  }
+
+  function rememberVisitor() {
+    if (!visitorIdElement || !visitorMemoryElement) {
+      return;
+    }
+
+    var now = new Date().toISOString();
+    var memory = readVisitorMemory();
+    var previousLastVisit = memory && memory.lastVisit;
+    var newSession = isNewSession();
+
+    if (!memory) {
+      memory = {
+        visitorId: createVisitorId(),
+        firstVisit: now,
+        lastVisit: now,
+        visitCount: 0,
+        lastRoom: "hall"
+      };
+    }
+
+    if (newSession) {
+      memory.visitCount += 1;
+      memory.lastVisit = now;
+    }
+
+    memory.lastRoom = memory.lastRoom || "hall";
+    writeVisitorMemory(memory);
+    updateVisitorDisplay(memory, previousLastVisit);
+  }
+
+  function rememberRoom(room) {
+    var memory = readVisitorMemory();
+
+    if (!memory) {
+      return;
+    }
+
+    memory.lastRoom = room || "hall";
+    writeVisitorMemory(memory);
+  }
 
   function readWeatherEffectsPreference() {
     try {
@@ -91,6 +202,7 @@
     }
 
     transitionLocked = true;
+    rememberRoom(room);
     setSceneFocus(room, element);
     status.textContent = room.toUpperCase() + " / OPEN";
     document.body.classList.remove("is-previewing");
@@ -205,5 +317,6 @@
   });
 
   setWeatherEffects(readWeatherEffectsPreference(), false);
+  rememberVisitor();
   environment.start();
 })();

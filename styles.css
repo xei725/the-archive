@@ -463,7 +463,8 @@ body[data-weather-intensity="moderate"] .weather-foreground__snow i:nth-child(n 
 }
 
 .environment__time,
-.environment__weather {
+.environment__weather,
+.environment__visitor {
   display: grid;
   justify-items: end;
   gap: 0.26rem;
@@ -471,6 +472,11 @@ body[data-weather-intensity="moderate"] .weather-foreground__snow i:nth-child(n 
 
 .environment__weather {
   pointer-events: auto;
+}
+
+.environment__visitor {
+  margin-top: 0.28rem;
+  opacity: 0.82;
 }
 
 .environment__label {
@@ -553,6 +559,14 @@ body[data-weather-status="connected"] .environment__location-button {
 
 .environment__time .environment__meta {
   display: none;
+}
+
+.environment__visitor .environment__value {
+  font-size: clamp(0.64rem, 0.86vw, 0.78rem);
+}
+
+.environment__visitor .environment__meta {
+  color: rgba(243, 238, 227, 0.58);
 }
 
 .room-map {
@@ -824,8 +838,20 @@ body.is-previewing .scene__image {
     max-width: 52vw;
   }
 
+  .environment__visitor {
+    max-width: 52vw;
+  }
+
   .environment__value {
     font-size: 0.66rem;
+  }
+
+  .environment__visitor .environment__value {
+    font-size: 0.54rem;
+  }
+
+  .environment__visitor .environment__meta {
+    font-size: 0.46rem;
   }
 
   .environment__location-button {
