@@ -9,13 +9,16 @@ window.EZ_LIBRARY = {
       ],
       "items": [
         {
-          "id": "file-archive-hall-test",
-          "title": "Archive Hall — image resource test",
+          "id": "file-47c2442b-c949-42b5-9402-eb3e11cef0f7",
+          "title": "001",
           "type": "file",
           "description": "WEZ   OvO",
           "content": "",
-          "url": "assets/images/archive-hall-room.png",
-          "mimeType": "image/png"
+          "url": "library-files/whats-new/file-47c2442b-c949-42b5-9402-eb3e11cef0f7-_20260709183512_149_1.jpg",
+          "fileSha": "2803c26f6414ede0247160fa80ce719e7f767d15",
+          "mimeType": "image/jpeg",
+          "fileSize": 86923,
+          "uploadedAt": "2026-07-14T07:59:28.564Z"
         }
       ]
     },
