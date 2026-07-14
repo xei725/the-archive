@@ -12,7 +12,7 @@ window.EZ_LIBRARY = {
           "id": "file-archive-hall-test",
           "title": "Archive Hall — image resource test",
           "type": "file",
-          "description": "A local image resource used to verify EZ Library file browsing and preview.",
+          "description": "WEZ   OvO",
           "content": "",
           "url": "assets/images/archive-hall-room.png",
           "mimeType": "image/png"
