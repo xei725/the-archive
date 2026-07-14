@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
+    <title>Photo Corridor Admin — The Archive</title>
+    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="gallery-admin.css" />
+  </head>
+  <body>
+    <main class="admin-shell">
+      <header class="admin-header">
+        <div>
+          <p class="admin-label">THE ARCHIVE / PHOTO CORRIDOR</p>
+          <h1>GALLERY MANAGER</h1>
+        </div>
+        <nav class="admin-header-links" aria-label="Admin navigation">
+          <a href="gallery.html">[ VIEW GALLERY ]</a>
+          <a href="admin.html">[ LIBRARY ADMIN ]</a>
+        </nav>
+      </header>
+
+      <section class="login-panel" id="login-panel" aria-labelledby="login-title">
+        <h2 id="login-title">GitHub administrator access</h2>
+        <p>
+          Enter a fine-grained GitHub token limited to <strong>xei725/the-archive</strong>
+          with <strong>Contents: Read and write</strong> permission.
+        </p>
+        <ol class="permission-list">
+          <li>Resource owner: <strong>xei725</strong></li>
+          <li>Repository access: <strong>Only select repositories → the-archive</strong></li>
+          <li>Repository permissions: <strong>Contents → Read and write</strong></li>
+        </ol>
+        <p>
+          The token stays in this tab's memory only and is discarded when the tab closes.
+          <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Create a fine-grained token</a>.
+        </p>
+        <div class="login-diagnostics" id="login-diagnostics" role="alert" hidden>
+          <p id="login-diagnostics-message"></p>
+        </div>
+        <form id="login-form">
+          <label for="token-input">GITHUB TOKEN</label>
+          <input id="token-input" name="token" type="password" autocomplete="off" required />
+          <button type="submit">[ CONNECT ]</button>
+        </form>
+      </section>
+
+      <section class="admin-editor" id="admin-editor" hidden>
+        <div class="admin-toolbar">
+          <div class="admin-actions">
+            <button id="save-button" type="button">[ SAVE TO WEBSITE ]</button>
+            <button id="reload-button" type="button">[ RELOAD ]</button>
+            <a id="published-link" href="gallery.html" hidden>[ VIEW LATEST ]</a>
+          </div>
+          <p class="connection-summary" id="connection-summary"></p>
+          <button id="logout-button" type="button">[ LOG OUT ]</button>
+        </div>
+
+        <div class="gallery-editor-layout">
+          <aside class="photo-sidebar">
+            <div class="sidebar-heading">
+              <h2>PHOTOGRAPHS <span id="photo-count">0</span></h2>
+              <button id="upload-photo-button" type="button">[ + UPLOAD ]</button>
+              <input id="photo-file-input" type="file" accept="image/jpeg,image/png,image/webp,image/avif" hidden />
+            </div>
+            <p class="upload-note">Images are resized to 1920 px and compressed before upload.</p>
+            <div class="photo-admin-list" id="photo-admin-list"></div>
+          </aside>
+
+          <section class="photo-editor" aria-labelledby="photo-editor-title">
+            <div class="photo-editor-empty" id="photo-editor-empty">
+              Upload a photograph or select an existing record.
+            </div>
+
+            <div id="photo-editor-fields" hidden>
+              <div class="photo-editor-heading">
+                <div>
+                  <p class="admin-label" id="selected-record-id"></p>
+                  <h2 id="photo-editor-title">PHOTOGRAPH RECORD</h2>
+                </div>
+                <div class="record-actions">
+                  <button id="move-up-button" type="button">[ ↑ ]</button>
+                  <button id="move-down-button" type="button">[ ↓ ]</button>
+                  <button id="replace-photo-button" type="button">[ REPLACE IMAGE ]</button>
+                  <button id="delete-photo-button" type="button">[ DELETE ]</button>
+                </div>
+              </div>
+
+              <div class="photo-edit-grid">
+                <figure class="photo-preview">
+                  <img id="photo-preview-image" alt="" />
+                  <figcaption id="photo-preview-meta"></figcaption>
+                </figure>
+
+                <div class="photo-fields">
+                  <label>
+                    TITLE
+                    <input id="photo-title-input" type="text" />
+                  </label>
+                  <label>
+                    DATE / DISPLAY TEXT
+                    <input id="photo-date-input" type="text" placeholder="2026.07" />
+                  </label>
+                  <label>
+                    CATEGORY
+                    <select id="photo-category-input">
+                      <option value="real">REAL</option>
+                      <option value="archive">ARCHIVE</option>
+                      <option value="anomalies">ANOMALIES</option>
+                    </select>
+                  </label>
+                  <label>
+                    FRAME
+                    <select id="photo-frame-input">
+                      <option value="wood">WOOD</option>
+                      <option value="metal">METAL</option>
+                      <option value="brass">BRASS</option>
+                    </select>
+                  </label>
+                  <label>
+                    DISPLAY SHAPE
+                    <select id="photo-size-input">
+                      <option value="landscape">LANDSCAPE</option>
+                      <option value="portrait">PORTRAIT</option>
+                      <option value="square">SQUARE</option>
+                    </select>
+                  </label>
+                  <label>
+                    FRAME TILT
+                    <input id="photo-tilt-input" type="number" min="-1" max="1" step="0.05" />
+                  </label>
+                  <label class="field-wide">
+                    ACCESSIBLE DESCRIPTION
+                    <input id="photo-alt-input" type="text" />
+                  </label>
+                  <label class="field-wide">
+                    RECORD DESCRIPTION
+                    <textarea id="photo-description-input" rows="4"></textarea>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <p class="admin-status" id="admin-status" role="status" aria-live="polite">READ ONLY UNTIL CONNECTED</p>
+    </main>
+
+    <script src="gallery-admin.js"></script>
+  </body>
+</html>

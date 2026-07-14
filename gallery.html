@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="The Archive Photo Corridor, a continuous collection of personal and archival photographs."
+    />
+    <meta name="theme-color" content="#0c0b08" />
+    <title>Photo Corridor — The Archive</title>
+    <link rel="stylesheet" href="gallery.css" />
+    <script src="gallery-data.js" defer></script>
+    <script src="gallery.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#corridor-records">Skip to photographs</a>
+
+    <main class="photo-corridor">
+      <header class="corridor-header">
+        <a class="corridor-wordmark" href="index.html" aria-label="Return to The Archive Hall">
+          THE ARCHIVE
+        </a>
+        <h1>PHOTO CORRIDOR</h1>
+        <p class="corridor-count" id="corridor-count" aria-live="polite">0 RECORDS</p>
+
+        <nav class="corridor-filters" aria-label="Filter photographs">
+          <button class="is-active" type="button" data-filter="all" aria-pressed="true">ALL</button>
+          <button type="button" data-filter="real" aria-pressed="false">REAL</button>
+          <button type="button" data-filter="archive" aria-pressed="false">ARCHIVE</button>
+          <button type="button" data-filter="anomalies" aria-pressed="false">ANOMALIES</button>
+        </nav>
+      </header>
+
+      <section class="corridor-scene" aria-label="Archive photograph corridor">
+        <div class="corridor-architecture" aria-hidden="true">
+          <img
+            class="corridor-background"
+            src="assets/images/photo-corridor/corridor-environment.jpg"
+            alt=""
+            width="1536"
+            height="864"
+          />
+          <div class="corridor-ceiling"></div>
+          <div class="corridor-floor"></div>
+          <div class="corridor-back-wall">
+            <div class="corridor-exit-light"></div>
+            <div class="corridor-door"></div>
+          </div>
+          <div class="corridor-light corridor-light--one"></div>
+          <div class="corridor-light corridor-light--two"></div>
+          <div class="corridor-light corridor-light--three"></div>
+          <div class="corridor-grain"></div>
+        </div>
+
+        <div
+          class="corridor-records"
+          id="corridor-records"
+          role="list"
+          aria-label="All photographs"
+          tabindex="0"
+        >
+          <div class="corridor-sentinel" id="corridor-sentinel" aria-hidden="true"></div>
+        </div>
+
+        <noscript>
+          <p class="corridor-noscript">JavaScript is required to arrange and filter the corridor records.</p>
+        </noscript>
+      </section>
+
+      <footer class="corridor-footer">
+        <a href="index.html"><span aria-hidden="true">←</span> ARCHIVE HALL</a>
+        <p>CORRIDOR 01 / COLLECTION ACTIVE</p>
+        <a class="corridor-admin-link" href="gallery-admin.html">MANAGE</a>
+      </footer>
+    </main>
+
+    <dialog class="photo-dialog" id="photo-dialog" aria-labelledby="dialog-title">
+      <button class="photo-dialog__close" id="dialog-close" type="button">CLOSE RECORD</button>
+      <div class="photo-dialog__media">
+        <img id="dialog-image" alt="" />
+      </div>
+      <div class="photo-dialog__details">
+        <p class="photo-dialog__category" id="dialog-category"></p>
+        <h2 id="dialog-title"></h2>
+        <time id="dialog-date"></time>
+        <p id="dialog-description"></p>
+      </div>
+    </dialog>
+  </body>
+</html>

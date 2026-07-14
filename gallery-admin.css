@@ -1,0 +1,229 @@
+.admin-header-links,
+.record-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-header-links {
+  justify-content: flex-end;
+}
+
+.gallery-editor-layout {
+  display: grid;
+  grid-template-columns: 290px minmax(0, 1fr);
+  min-height: 680px;
+}
+
+.photo-sidebar {
+  min-width: 0;
+  padding: 22px 18px 22px 0;
+  border-right: 1px solid #333333;
+}
+
+.photo-sidebar h2,
+.photo-editor h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: normal;
+  letter-spacing: 0.08em;
+}
+
+.photo-sidebar h2 span {
+  color: #888888;
+}
+
+.upload-note {
+  margin: 12px 0 16px;
+  color: #888888;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.photo-admin-list {
+  max-height: 72vh;
+  overflow-y: auto;
+  border-top: 1px solid #222222;
+}
+
+.photo-admin-list:empty::before {
+  content: "No photograph records.";
+  display: block;
+  padding: 32px 4px;
+  color: #777777;
+  text-align: center;
+}
+
+.photo-admin-button {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 10px;
+  width: 100%;
+  padding: 11px 5px;
+  border: 0;
+  border-bottom: 1px solid #222222;
+  text-align: left;
+}
+
+.photo-admin-button strong {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.photo-admin-button span,
+.photo-admin-button small {
+  color: #777777;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.photo-admin-button small {
+  grid-column: 1 / -1;
+}
+
+.photo-admin-button.is-active {
+  color: #ffff00;
+  background: #111111;
+}
+
+.photo-admin-button.is-active span {
+  color: #cccc88;
+}
+
+.photo-editor {
+  min-width: 0;
+  padding: 22px 0 22px 24px;
+}
+
+.photo-editor-empty {
+  display: grid;
+  min-height: 400px;
+  place-items: center;
+  color: #777777;
+  text-align: center;
+}
+
+.photo-editor-empty[hidden] {
+  display: none;
+}
+
+.photo-editor-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #333333;
+}
+
+.photo-edit-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.85fr) minmax(300px, 1.15fr);
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.photo-preview {
+  align-self: start;
+  margin: 0;
+}
+
+.photo-preview img {
+  display: block;
+  width: 100%;
+  max-height: 500px;
+  border: 1px solid #444444;
+  background: #0a0a0a;
+  object-fit: contain;
+}
+
+.photo-preview figcaption {
+  margin-top: 8px;
+  color: #777777;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.photo-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-content: start;
+  gap: 14px;
+}
+
+.photo-fields label {
+  display: block;
+  color: #aaaaaa;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.photo-fields input,
+.photo-fields textarea,
+.photo-fields select {
+  margin-top: 6px;
+}
+
+.photo-fields .field-wide {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 860px) {
+  .gallery-editor-layout {
+    display: block;
+  }
+
+  .photo-sidebar {
+    padding-right: 0;
+    border-right: 0;
+    border-bottom: 1px solid #333333;
+  }
+
+  .photo-admin-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-height: 280px;
+  }
+
+  .photo-editor {
+    padding-left: 0;
+  }
+
+  .photo-edit-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .photo-preview img {
+    max-height: 440px;
+  }
+}
+
+@media (max-width: 560px) {
+  .admin-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-header-links {
+    justify-content: flex-start;
+  }
+
+  .photo-admin-list,
+  .photo-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .photo-fields .field-wide {
+    grid-column: auto;
+  }
+
+  .photo-editor-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
