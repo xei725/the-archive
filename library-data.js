@@ -4,7 +4,9 @@ window.EZ_LIBRARY = {
     {
       "id": "whats-new",
       "title": "What's New",
-      "lines": ["What's New"],
+      "lines": [
+        "What's New"
+      ],
       "items": [
         {
           "id": "file-archive-hall-test",
@@ -17,28 +19,221 @@ window.EZ_LIBRARY = {
         }
       ]
     },
-    { "id": "bombs-destruction-vandalism", "title": "Bombs, Destruction & Vandalism", "lines": ["Bombs, Destruction &", "Vandalism"], "items": [] },
-    { "id": "underground-hacking-phreaking", "title": "Underground Hacking and Phreaking", "lines": ["Underground", "Hacking and", "Phreaking"], "items": [] },
-    { "id": "legal-system", "title": "Legal System", "lines": ["Legal System"], "items": [] },
-    { "id": "religion-occultism-theology-philosophy", "title": "Religion, Occultism, Theology & Philosophy", "lines": ["Religion, Occultism,", "Theology &", "Philosophy"], "items": [] },
-    { "id": "nazism-nationalism-racism-revisionism-fascism-ariosophy", "title": "Nazism, Nationalism, Racism, Revisionism, Fascism & Ariosophy", "lines": ["Nazism, Nationalism,", "Racism, Revisionism,", "Fascism & Ariosophy"], "items": [] },
-    { "id": "conspiracy-theories", "title": "Conspiracy Theories", "lines": ["Conspiracy", "Theories"], "items": [] },
-    { "id": "theft-fraud-scams-carding-tricking-system", "title": "Theft, Fraud, Scams, Carding and tricking the System", "lines": ["Theft, Fraud, Scams,", "Carding and tricking the", "System"], "items": [] },
-    { "id": "lock-picking", "title": "Lock-picking", "lines": ["Lock-picking"], "items": [] },
-    { "id": "privacy-cryptography-ciphering", "title": "Privacy, Cryptography and Ciphering", "lines": ["Privacy, Cryptography and", "Ciphering"], "items": [] },
-    { "id": "visual-data-crime", "title": "Visual Data Crime", "lines": ["Visual Data Crime"], "items": [] },
-    { "id": "computer-viruses", "title": "Computer viruses", "lines": ["Computer viruses"], "items": [] },
-    { "id": "anarchy-privacy-control", "title": "Anarchy & Privacy control", "lines": ["Anarchy & Privacy", "control"], "items": [] },
-    { "id": "war-weaponry-terrorism-pyrotechnics", "title": "War, Weaponry, Terrorism & Pyrotechnics", "lines": ["War, Weaponry, Terrorism &", "Pyrotechnics"], "items": [] },
-    { "id": "science-technology", "title": "Science & Technology", "lines": ["Science &", "Technology"], "items": [] },
-    { "id": "hoaxes", "title": "Hoaxes", "lines": ["Hoaxes"], "items": [] },
-    { "id": "misc", "title": "Misc", "lines": ["Misc"], "items": [] },
-    { "id": "biographies", "title": "Biographies", "lines": ["Biographies"], "items": [] },
-    { "id": "drugs", "title": "Drugs", "lines": ["Drugs"], "items": [] },
-    { "id": "government-information", "title": "Government Information", "lines": ["Government", "Information"], "items": [] },
-    { "id": "aliens-ufos", "title": "Aliens & UFOs", "lines": ["Aliens & UFOs"], "items": [] },
-    { "id": "it", "title": "I.T.", "lines": ["I.T."], "items": [] },
-    { "id": "mathematics", "title": "Mathematics", "lines": ["Mathematics"], "items": [] },
-    { "id": "thought-writing", "title": "Thought & Writing", "lines": ["Thought & Writing"], "items": [] }
+    {
+      "id": "bombs-destruction-vandalism",
+      "title": "Bombs, Destruction & Vandalism",
+      "lines": [
+        "Bombs, Destruction &",
+        "Vandalism"
+      ],
+      "items": []
+    },
+    {
+      "id": "underground-hacking-phreaking",
+      "title": "Underground Hacking and Phreaking",
+      "lines": [
+        "Underground",
+        "Hacking and",
+        "Phreaking"
+      ],
+      "items": []
+    },
+    {
+      "id": "legal-system",
+      "title": "Legal System",
+      "lines": [
+        "Legal System"
+      ],
+      "items": []
+    },
+    {
+      "id": "religion-occultism-theology-philosophy",
+      "title": "Religion, Occultism, Theology & Philosophy",
+      "lines": [
+        "Religion, Occultism,",
+        "Theology &",
+        "Philosophy"
+      ],
+      "items": []
+    },
+    {
+      "id": "nazism-nationalism-racism-revisionism-fascism-ariosophy",
+      "title": "Nazism, Nationalism, Racism, Revisionism, Fascism & Ariosophy",
+      "lines": [
+        "Nazism, Nationalism,",
+        "Racism, Revisionism,",
+        "Fascism & Ariosophy"
+      ],
+      "items": []
+    },
+    {
+      "id": "conspiracy-theories",
+      "title": "Conspiracy Theories",
+      "lines": [
+        "Conspiracy",
+        "Theories"
+      ],
+      "items": []
+    },
+    {
+      "id": "theft-fraud-scams-carding-tricking-system",
+      "title": "Theft, Fraud, Scams, Carding and tricking the System",
+      "lines": [
+        "Theft, Fraud, Scams,",
+        "Carding and tricking the",
+        "System"
+      ],
+      "items": []
+    },
+    {
+      "id": "lock-picking",
+      "title": "Lock-picking",
+      "lines": [
+        "Lock-picking"
+      ],
+      "items": []
+    },
+    {
+      "id": "privacy-cryptography-ciphering",
+      "title": "Privacy, Cryptography and Ciphering",
+      "lines": [
+        "Privacy, Cryptography and",
+        "Ciphering"
+      ],
+      "items": []
+    },
+    {
+      "id": "visual-data-crime",
+      "title": "Visual Data Crime",
+      "lines": [
+        "Visual Data Crime"
+      ],
+      "items": []
+    },
+    {
+      "id": "computer-viruses",
+      "title": "Computer viruses",
+      "lines": [
+        "Computer viruses"
+      ],
+      "items": []
+    },
+    {
+      "id": "anarchy-privacy-control",
+      "title": "Anarchy & Privacy control",
+      "lines": [
+        "Anarchy & Privacy",
+        "control"
+      ],
+      "items": []
+    },
+    {
+      "id": "war-weaponry-terrorism-pyrotechnics",
+      "title": "War, Weaponry, Terrorism & Pyrotechnics",
+      "lines": [
+        "War, Weaponry, Terrorism &",
+        "Pyrotechnics"
+      ],
+      "items": []
+    },
+    {
+      "id": "science-technology",
+      "title": "Science & Technology",
+      "lines": [
+        "Science &",
+        "Technology"
+      ],
+      "items": []
+    },
+    {
+      "id": "hoaxes",
+      "title": "Hoaxes",
+      "lines": [
+        "Hoaxes"
+      ],
+      "items": []
+    },
+    {
+      "id": "misc",
+      "title": "Misc",
+      "lines": [
+        "Misc"
+      ],
+      "items": []
+    },
+    {
+      "id": "biographies",
+      "title": "Biographies",
+      "lines": [
+        "Biographies"
+      ],
+      "items": []
+    },
+    {
+      "id": "drugs",
+      "title": "Drugs",
+      "lines": [
+        "Drugs"
+      ],
+      "items": []
+    },
+    {
+      "id": "government-information",
+      "title": "Government Information",
+      "lines": [
+        "Government",
+        "Information"
+      ],
+      "items": []
+    },
+    {
+      "id": "aliens-ufos",
+      "title": "Aliens & UFOs",
+      "lines": [
+        "Aliens & UFOs"
+      ],
+      "items": []
+    },
+    {
+      "id": "it",
+      "title": "I.T.",
+      "lines": [
+        "I.T."
+      ],
+      "items": []
+    },
+    {
+      "id": "mathematics",
+      "title": "Mathematics",
+      "lines": [
+        "Mathematics"
+      ],
+      "items": []
+    },
+    {
+      "id": "thought-writing",
+      "title": "Thought & Writing",
+      "lines": [
+        "Thought & Writing"
+      ],
+      "items": []
+    },
+    {
+      "id": "folder-b0c2c003-22f7-425b-ad9a-1119f06adc8c",
+      "title": "QA TEMP 1784015079934",
+      "lines": [
+        "Temporary end-to-end test"
+      ],
+      "items": [
+        {
+          "id": "item-a5eae19d-97c3-49b3-8bf3-b915d0c202f7",
+          "title": "Editable content test",
+          "type": "text",
+          "description": "Created through the deployed admin page.",
+          "content": "Folder content editing works.",
+          "url": ""
+        }
+      ]
+    }
   ]
 };
