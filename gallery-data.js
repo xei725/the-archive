@@ -96,5 +96,19 @@ window.PHOTO_CORRIDOR_RECORDS = [
     "frame": "metal",
     "size": "square",
     "tilt": -0.15
+  },
+  {
+    "id": "photo-8f24044d-39de-40c1-90d9-76c162ee334c",
+    "category": "real",
+    "src": "assets/images/photo-corridor/uploads/photo-8f24044d-39de-40c1-90d9-76c162ee334c-1784041828548-20260714230820-160-1.webp",
+    "width": 1280,
+    "height": 1707,
+    "alt": "tree",
+    "title": "20260714230820 160 1",
+    "date": "2026.07.14",
+    "description": "The scenery at sunset",
+    "frame": "wood",
+    "size": "portrait",
+    "tilt": 0
   }
 ];
