@@ -82,5 +82,19 @@ window.PHOTO_CORRIDOR_RECORDS = [
     "frame": "brass",
     "size": "portrait",
     "tilt": -0.75
+  },
+  {
+    "id": "photo-031b6c61-a05e-4ec1-8bbf-df2e20a2089e",
+    "category": "anomalies",
+    "src": "assets/images/photo-corridor/uploads/photo-031b6c61-a05e-4ec1-8bbf-df2e20a2089e-1784041727182-20260714230821-161-1.webp",
+    "width": 349,
+    "height": 356,
+    "alt": "Hacker",
+    "title": "Hacker",
+    "date": "2026.07.14",
+    "description": "HAHAHAHAHA",
+    "frame": "metal",
+    "size": "square",
+    "tilt": -0.15
   }
 ];
