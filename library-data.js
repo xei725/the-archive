@@ -217,23 +217,6 @@ window.EZ_LIBRARY = {
         "Thought & Writing"
       ],
       "items": []
-    },
-    {
-      "id": "folder-b0c2c003-22f7-425b-ad9a-1119f06adc8c",
-      "title": "QA TEMP 1784015079934",
-      "lines": [
-        "Temporary end-to-end test"
-      ],
-      "items": [
-        {
-          "id": "item-a5eae19d-97c3-49b3-8bf3-b915d0c202f7",
-          "title": "Editable content test",
-          "type": "text",
-          "description": "Created through the deployed admin page.",
-          "content": "Folder content editing works.",
-          "url": ""
-        }
-      ]
     }
   ]
 };
