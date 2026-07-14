@@ -1,28 +1,49 @@
 # The Archive
 
-无依赖的交互式个人网站原型。项目使用原生 HTML、CSS 和 JavaScript，可以直接打开，不需要 Node.js 或安装任何包。
+The Archive 是一个长期成长的个人数字空间。当前实现保持零构建、零第三方依赖，只使用原生 HTML、CSS 和 JavaScript。
 
-## 打开方式
+## Phase 1 当前状态
 
-直接双击 `index.html` 即可。
+- Archive Hall 已重构为中式千禧年私人电脑房。
+- Library、Studio、Gallery、Journal 四个入口已经预留。
+- Library 已连接现有 EZ Library；其余三个入口会明确显示正在准备中。
+- 本地时间和日期是真实数据，每秒更新。
+- 天气系统只保留真实数据接口；未接入提供方时显示 NOT CONNECTED，不制造虚假天气。
+- 房间悬停、键盘焦点和进入转场已经完成。
+- 环境声由浏览器本地生成，默认关闭，不需要音频文件。
+- 桌面、平板和移动端都提供可用导航。
 
-也可以在此目录运行本地服务器：
+## 本地打开
 
-```powershell
-python -m http.server 4173
-```
+可以直接打开 index.html。
 
-然后访问 `http://127.0.0.1:4173`。
+如需用本地服务器验证：
 
-## 当前内容
+    python -m http.server 4173
 
-- 首次进入与再次访问的不同开场
-- 本地保存访客访问状态
-- 真实风景双层影像与鼠标／触摸扫描
-- SUBJECT、WORKS、VISUAL RECORDS 三个可交互档案
-- LIMBO 过渡区域
-- 本地时间、状态反馈与可选环境音
-- 桌面、平板和移动端响应式布局
-- 键盘焦点、跳过开场和减少动态效果支持
+然后访问 http://127.0.0.1:4173 。
 
-个人资料与作品内容目前是初始结构，后续可以逐项替换为真实档案。
+## 天气提供方接口
+
+在 environment.js 执行前设置 window.ArchiveWeatherProvider。它可以是异步函数，也可以是带 getCurrent 方法的对象，返回：
+
+    {
+      condition: "cloudy",
+      temperature: 24,
+      unit: "C",
+      location: "Shanghai"
+    }
+
+支持的基础状态包括 clear、cloudy、rain、storm、snow 和 fog。后续接入天气 API 时，不需要修改大厅交互代码。
+
+## 主要文件
+
+- index.html：大厅语义结构和四个入口。
+- styles.css：场景、入口、转场和响应式布局。
+- environment.js：时间系统和天气提供方接口。
+- script.js：房间交互、转场和本地环境声。
+- assets/images/archive-hall-room.png：大厅生产背景。
+- design/archive-hall-concept.png：本阶段视觉概念。
+- design/archive-hall-spec.md：设计系统和可见文案锁定。
+
+Library、文件夹页和本地管理页继续沿用现有文件，不受本次首页重构影响。
