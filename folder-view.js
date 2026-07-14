@@ -41,10 +41,24 @@
     folderItems.forEach(function (item) {
       var row = document.createElement("li");
       var link = document.createElement("a");
+      var label = document.createElement("span");
       var type = document.createElement("span");
       row.className = "folder-item";
+      link.className = "folder-item__link";
       link.href = "folder.html?folder=" + encodeURIComponent(folder.id) + "&item=" + encodeURIComponent(item.id);
-      link.textContent = item.title || "Untitled item";
+      label.textContent = item.title || "Untitled item";
+      if (item.type === "file") {
+        var thumbnailUrl = getSafeRecordUrl(item.url);
+        if (thumbnailUrl && isImageFile(item, thumbnailUrl)) {
+          var thumbnail = document.createElement("img");
+          thumbnail.className = "folder-item__thumb";
+          thumbnail.src = thumbnailUrl;
+          thumbnail.alt = "";
+          thumbnail.loading = "lazy";
+          link.appendChild(thumbnail);
+        }
+      }
+      link.appendChild(label);
       type.className = "folder-item__type";
       type.textContent = "[" + String(item.type || "text").toUpperCase() + "]";
       row.appendChild(link);
