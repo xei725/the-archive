@@ -1,19 +1,5 @@
 window.PHOTO_CORRIDOR_RECORDS = [
   {
-    "id": "real-valley-summer",
-    "category": "real",
-    "src": "assets/images/photo-corridor/real-valley-summer.jpg",
-    "width": 1280,
-    "height": 720,
-    "alt": "A still mountain lake reflecting a bright summer sky",
-    "title": "Valley, Summer",
-    "date": "2026.07",
-    "description": "A clear afternoon held in the personal collection.",
-    "frame": "wood",
-    "size": "landscape",
-    "tilt": -0.45
-  },
-  {
     "id": "archive-entrance-1998",
     "category": "archive",
     "src": "assets/images/photo-corridor/archive-entrance-1998.jpg",
@@ -26,20 +12,6 @@ window.PHOTO_CORRIDOR_RECORDS = [
     "frame": "metal",
     "size": "portrait",
     "tilt": 0.55
-  },
-  {
-    "id": "real-valley-blue-hour",
-    "category": "real",
-    "src": "assets/images/photo-corridor/real-valley-blue-hour.jpg",
-    "width": 1280,
-    "height": 720,
-    "alt": "A mountain lake under a dark blue overcast sky",
-    "title": "Blue Hour",
-    "date": "2026.07",
-    "description": "The same valley after the light left the water.",
-    "frame": "brass",
-    "size": "landscape",
-    "tilt": 0.35
   },
   {
     "id": "anomaly-staff-2004",
@@ -124,5 +96,19 @@ window.PHOTO_CORRIDOR_RECORDS = [
     "frame": "wood",
     "size": "portrait",
     "tilt": 0.15
+  },
+  {
+    "id": "photo-e2528f02-4a9b-4139-a51f-2c11f59a47a2",
+    "category": "real",
+    "src": "assets/images/photo-corridor/uploads/photo-e2528f02-4a9b-4139-a51f-2c11f59a47a2-1784090591799-20260715122800-164-1.webp",
+    "width": 1079,
+    "height": 1920,
+    "alt": "20260715122800",
+    "title": "20260715122800",
+    "date": "2026.07.15",
+    "description": "summer   puppy",
+    "frame": "wood",
+    "size": "portrait",
+    "tilt": 0
   }
 ];
