@@ -110,5 +110,19 @@ window.PHOTO_CORRIDOR_RECORDS = [
     "frame": "wood",
     "size": "portrait",
     "tilt": 0
+  },
+  {
+    "id": "photo-ef6f60a5-a303-43ee-b143-8c304386bc07",
+    "category": "real",
+    "src": "assets/images/photo-corridor/uploads/photo-ef6f60a5-a303-43ee-b143-8c304386bc07-1784088625080-20260715120906-163-1.webp",
+    "width": 958,
+    "height": 1278,
+    "alt": "TUTU",
+    "title": "TUTU",
+    "date": "2026.07.15",
+    "description": "Parrot",
+    "frame": "wood",
+    "size": "portrait",
+    "tilt": 0.15
   }
 ];
